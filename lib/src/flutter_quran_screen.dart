@@ -6,8 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import 'controllers/bookmarks_controller.dart';
-import 'controllers/quran_controller.dart';
+import 'controllers/bookmarks_ctrl.dart';
+import 'controllers/quran_ctrl.dart';
 import 'models/quran_constants.dart';
 import 'models/quran_page.dart';
 
@@ -173,7 +173,7 @@ class FlutterQuranScreen extends StatelessWidget {
                               ),
                             ...quranCtrl.staticPages[pageIndex].lines
                                 .map((line) {
-                              return GetBuilder<BookmarksController>(
+                              return GetBuilder<BookmarksCtrl>(
                                 builder: (bookmarkCtrl) {
                                   final bookmarksAyahs = bookmarkCtrl.bookmarks
                                       .map((bookmark) => bookmark.ayahId)
@@ -216,7 +216,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                 newSurahs.add(line.ayahs[0].surahNameAr);
                                 firstAyah = true;
                               }
-                              return GetBuilder<BookmarksController>(
+                              return GetBuilder<BookmarksCtrl>(
                                 builder: (bookmarkCtrl) {
                                   final bookmarksAyahs = bookmarkCtrl.bookmarks
                                       .map((bookmark) => bookmark.ayahId)

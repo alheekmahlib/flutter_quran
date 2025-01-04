@@ -28,7 +28,7 @@ class AyahLongClickDialog extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                ...BookmarksController.instance.bookmarks
+                ...BookmarksCtrl.instance.bookmarks
                     .sublist(0, 3)
                     .map((bookmark) => ListTile(
                           leading: Icon(
@@ -41,7 +41,7 @@ class AyahLongClickDialog extends StatelessWidget {
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           onTap: () {
-                            BookmarksController.instance.saveBookmark(
+                            BookmarksCtrl.instance.saveBookmark(
                                 ayahId: ayah.id,
                                 page: ayah.page,
                                 bookmarkId: bookmark.id);

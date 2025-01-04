@@ -4,8 +4,8 @@ import 'package:flutter_quran/src/models/bookmark.dart';
 import 'package:flutter_quran/src/models/surah.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../controllers/bookmarks_controller.dart';
-import '../controllers/quran_controller.dart';
+import '../controllers/bookmarks_ctrl.dart';
+import '../controllers/quran_ctrl.dart';
 import '../models/quran_constants.dart';
 import 'preferences/preferences_utils.dart';
 
@@ -17,7 +17,7 @@ class FlutterQuran {
     PreferencesUtils().preferences = await SharedPreferences.getInstance();
     // Get.put(QuranController());
     await QuranCtrl.instance.loadQuran();
-    BookmarksController.instance.initBookmarks(
+    BookmarksCtrl.instance.initBookmarks(
         userBookmarks: userBookmarks, overwrite: overwriteBookmarks);
   }
 
@@ -38,10 +38,10 @@ class FlutterQuran {
   /// open quran screen it will start from this ayah's page
   void navigateToAyah(Ayah ayah) {
     quranCtrl.animateToPage(ayah.page - 1);
-    BookmarksController.instance
+    BookmarksCtrl.instance
         .saveBookmark(ayahId: ayah.id, page: ayah.page, bookmarkId: 3);
     Future.delayed(const Duration(seconds: 3))
-        .then((value) => BookmarksController.instance.removeBookmark(3));
+        .then((value) => BookmarksCtrl.instance.removeBookmark(3));
   }
 
   /// [navigateToPage] let's you navigate to any quran page with page number
@@ -96,13 +96,12 @@ class FlutterQuran {
       .toList();
 
   ///[getAllBookmarks] returns list of all bookmarks
-  List<Bookmark> getAllBookmarks() => BookmarksController.instance.bookmarks
-      .sublist(0, BookmarksController.instance.bookmarks.length - 1);
+  List<Bookmark> getAllBookmarks() => BookmarksCtrl.instance.bookmarks
+      .sublist(0, BookmarksCtrl.instance.bookmarks.length - 1);
 
   ///[getUsedBookmarks] returns list of all bookmarks used and set by the user in quran pages
-  List<Bookmark> getUsedBookmarks() => BookmarksController.instance.bookmarks
-      .where((b) => b.page != -1)
-      .toList();
+  List<Bookmark> getUsedBookmarks() =>
+      BookmarksCtrl.instance.bookmarks.where((b) => b.page != -1).toList();
 
   /// Sets a bookmark with the given [ayahId], [page] and [bookmarkId].
   ///
@@ -113,13 +112,13 @@ class FlutterQuran {
   /// You can't save a bookmark with a page number that is not between 1 and 604.
   void setBookmark(
           {required int ayahId, required int page, required int bookmarkId}) =>
-      BookmarksController.instance
+      BookmarksCtrl.instance
           .saveBookmark(ayahId: ayahId, page: page, bookmarkId: bookmarkId);
 
   /// Removes a bookmark from the list of user's saved bookmarks.
   /// [bookmarkId] is the id of the bookmark to be removed.
   void removeBookmark({required int bookmarkId}) =>
-      BookmarksController.instance.removeBookmark(bookmarkId);
+      BookmarksCtrl.instance.removeBookmark(bookmarkId);
 
   /// [hafsStyle] is the default style for Quran so all special characters will be rendered correctly
   final hafsStyle = const TextStyle(

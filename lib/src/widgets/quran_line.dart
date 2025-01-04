@@ -31,7 +31,7 @@ class QuranLine extends StatelessWidget {
                         ? bookmarks[bookmarksAyahs.indexOf(ayah.id)].id
                         : null;
                     if (bookmarkId != null) {
-                      BookmarksController.instance.removeBookmark(bookmarkId);
+                      BookmarksCtrl.instance.removeBookmark(bookmarkId);
                     } else {
                       showDialog(
                           context: context,

@@ -3,12 +3,11 @@ import 'package:get/get.dart';
 import '../models/bookmark.dart';
 import '../repository/quran_repository.dart';
 
-class BookmarksController extends GetxController {
-  static BookmarksController get instance =>
-      Get.isRegistered<BookmarksController>()
-          ? Get.find<BookmarksController>()
-          : Get.put<BookmarksController>(BookmarksController());
-  BookmarksController({QuranRepository? quranRepository})
+class BookmarksCtrl extends GetxController {
+  static BookmarksCtrl get instance => Get.isRegistered<BookmarksCtrl>()
+      ? Get.find<BookmarksCtrl>()
+      : Get.put<BookmarksCtrl>(BookmarksCtrl());
+  BookmarksCtrl({QuranRepository? quranRepository})
       : _quranRepository = quranRepository ?? QuranRepository(),
         super();
 
