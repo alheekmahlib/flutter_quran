@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quran/flutter_quran.dart';
 
-import 'search_screen.dart';
-
 void main() => runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -34,17 +32,6 @@ class _MyAppState extends State<MyApp> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 22.0),
-              child: GestureDetector(
-                  onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (ctx) => SearchScreen())),
-                  child: Icon(Icons.search)),
-            ),
-          ],
-        ),
         drawer: Drawer(
           child: Builder(builder: (context) {
             final jozzs = FlutterQuran().getAllJozzs();
@@ -135,8 +122,18 @@ class _MyAppState extends State<MyApp> {
             );
           }),
         ),
-        body: FlutterQuranScreen(
-          useDefaultAppBar: false,
+        body: const FlutterQuranScreen(
+          withPageView: true,
+          basmallahColor: Colors.black,
+          basmallahWidth: 150.0,
+          basmallahHeight: 40.0,
+          isSvg: false,
+          bannerSvgPath: '',
+          bannerSvgHeight: 150.0,
+          bannerSvgWidth: 40.0,
+          bannerImagePath: null,
+          bannerImageHeight: null,
+          bannerImageWidth: null,
         ),
       ),
     );

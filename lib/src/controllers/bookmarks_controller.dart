@@ -1,12 +1,16 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import '../models/bookmark.dart';
 import '../repository/quran_repository.dart';
 
-class BookmarksCubit extends Cubit<List<Bookmark>> {
-  BookmarksCubit({QuranRepository? quranRepository})
+class BookmarksController extends GetxController {
+  static BookmarksController get instance =>
+      Get.isRegistered<BookmarksController>()
+          ? Get.find<BookmarksController>()
+          : Get.put<BookmarksController>(BookmarksController());
+  BookmarksController({QuranRepository? quranRepository})
       : _quranRepository = quranRepository ?? QuranRepository(),
-        super([]);
+        super();
 
   final QuranRepository _quranRepository;
   final Bookmark searchBookmark =
@@ -33,7 +37,8 @@ class BookmarksCubit extends Cubit<List<Bookmark>> {
       }
     }
     _quranRepository.saveBookmarks(bookmarks);
-    emit(bookmarks);
+    // emit(bookmarks);
+    update();
   }
 
   saveBookmark({
@@ -51,7 +56,8 @@ class BookmarksCubit extends Cubit<List<Bookmark>> {
         _quranRepository.saveBookmarks(bookmarks);
       }
       bookmarks = [...bookmarks];
-      emit(bookmarks);
+      // emit(bookmarks);
+      update();
     }
   }
 
@@ -65,7 +71,8 @@ class BookmarksCubit extends Cubit<List<Bookmark>> {
         _quranRepository.saveBookmarks(bookmarks);
       }
       bookmarks = [...bookmarks];
-      emit(bookmarks);
+      // emit(bookmarks);
+      update();
     }
   }
 }

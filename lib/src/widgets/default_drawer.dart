@@ -17,7 +17,7 @@ class _DefaultDrawer extends StatelessWidget {
             onTap: () async {
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (ctx) => const _FlutterQuranSearchScreen()));
+                  builder: (ctx) => const FlutterQuranSearchScreen()));
             },
           ),
           ExpansionTile(

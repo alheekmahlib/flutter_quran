@@ -13,8 +13,8 @@ dependencies:
 
 
   # state management
-  bloc: ^8.1.4
-  flutter_bloc: ^8.1.6
+#  bloc: ^8.1.4
+#  flutter_bloc: ^8.1.6
 
 
   # local storage
@@ -25,6 +25,10 @@ dependencies:
 
   #Tools
   intl: ^0.19.0
+  package_rename: ^1.8.0
+  flutter_svg: ^2.0.16
+  get: ^4.6.6
+  get_storage: ^2.1.1
 
 # This package supports all platforms listed below.
 # But note that it works and fits on mobile size devices
@@ -42,6 +46,19 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
 
+package_rename_config:
+  android:
+    package_name: com.alheekmah.quranPackage
+
+  ios:
+    bundle_name: com.alheekmah.quranPackage
+    package_name: com.alheekmah.quranPackage
+
+  linux:
+    package_name: com.alheekmah.quranPackage
+
+  macos:
+    package_name: com.alheekmah.quranPackage
 
 flutter:
   assets:
@@ -50,6 +67,8 @@ flutter:
     - lib/assets/fonts/hafs.ttf
     - lib/assets/jsons/
     - lib/assets/images/
+    - lib/assets/svg/
+    - lib/assets/svg/surah_name/
     - lib/assets/images/surah_header.png
 
   fonts:

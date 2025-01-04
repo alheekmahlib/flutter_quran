@@ -27,6 +27,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const FlutterQuranScreen();
+    return const FlutterQuranScreen(
+      withPageView: true,
+      basmallahColor: Colors.black,
+      basmallahWidth: 150.0,
+      basmallahHeight: 30.0,
+      isSvg: false,
+      bannerSvgPath: '',
+      bannerSvgHeight: 40.0,
+      bannerSvgWidth: 150.0,
+      bannerImagePath: null,
+      bannerImageHeight: null,
+      bannerImageWidth: null,
+    );
   }
 }

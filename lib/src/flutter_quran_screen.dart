@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quran/flutter_quran.dart';
 import 'package:flutter_quran/src/utils/string_extensions.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
-import 'app_bloc.dart';
 import 'controllers/bookmarks_controller.dart';
 import 'controllers/quran_controller.dart';
 import 'models/quran_constants.dart';
 import 'models/quran_page.dart';
-part 'utils/images.dart';
+
+part 'utils/assets_path.dart';
 part 'utils/toast_utils.dart';
+part 'widgets/ayah_long_click_dialog.dart';
 part 'widgets/bsmallah_widget.dart';
+part 'widgets/default_drawer.dart';
 part 'widgets/quran_line.dart';
 part 'widgets/quran_page_bottom_info.dart';
 part 'widgets/surah_header_widget.dart';
-part 'widgets/default_drawer.dart';
-part 'widgets/ayah_long_click_dialog.dart';
 
 class FlutterQuranScreen extends StatelessWidget {
   const FlutterQuranScreen(
@@ -26,7 +27,21 @@ class FlutterQuranScreen extends StatelessWidget {
       this.bottomWidget,
       this.appBar,
       this.onPageChanged,
-      super.key});
+      super.key,
+      required this.basmallahColor,
+      this.basmallahWidth,
+      this.basmallahHeight,
+      this.bannerImagePath,
+      this.bannerImageWidth,
+      this.bannerImageHeight,
+      required this.isSvg,
+      required this.bannerSvgPath,
+      this.bannerSvgWidth,
+      this.bannerSvgHeight,
+      required this.withPageView,
+      this.pageIndex,
+      this.bookmarksColor,
+      this.onAyahLongPress});
 
   ///[showBottomWidget] is a bool to disable or enable the default bottom widget
   final bool showBottomWidget;
@@ -43,213 +58,253 @@ class FlutterQuranScreen extends StatelessWidget {
   ///[onPageChanged] if provided it will be called when a quran page changed
   final Function(int)? onPageChanged;
 
+  ///[basmallahColor] It is required to add the color for the basmalah
+  final Color basmallahColor;
+
+  ///[basmallahWidth] if you wanna add the width for the basmalah
+  final double? basmallahWidth;
+
+  ///[basmallahHeight] if you wanna add the height for the basmalah
+  final double? basmallahHeight;
+
+  ///[bannerImagePath] if you wanna add banner as image you can provide the path
+  final String? bannerImagePath;
+
+  ///[bannerImageWidth] if you wanna add the width for the banner image
+  final double? bannerImageWidth;
+
+  ///[bannerImageHeight] if you wanna add the height for the banner image
+  final double? bannerImageHeight;
+
+  ///[isSvg] if you wanna add banner as svg you can set it to true
+  final bool isSvg;
+
+  ///[bannerSvgPath] if you wanna add banner as svg you can provide the path
+  final String bannerSvgPath;
+
+  ///[bannerSvgWidth] if you wanna add the width for the banner svg
+  final double? bannerSvgWidth;
+
+  ///[bannerSvgHeight] if you wanna add the height for the banner svg
+  final double? bannerSvgHeight;
+
+  ///[withPageView] Enable this variable if you want to display the Quran with PageView
+  final bool withPageView;
+
+  ///[pageIndex] pass the page number if you do not want to display the Quran with PageView
+  final int? pageIndex;
+
+  ///[bookmarksColor] pass the page number if you do not want to display the Quran with PageView
+  final Color? bookmarksColor;
+
+  ///[onAyahLongPress] pass the page number if you do not want to display the Quran with PageView
+  final Function? onAyahLongPress;
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
-    return MultiBlocProvider(
-      providers: AppBloc.providers,
-      child: Directionality(
+    return GetBuilder<QuranController>(builder: (quranCtrl) {
+      return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: appBar ?? (useDefaultAppBar ? AppBar(elevation: 0) : null),
           drawer: appBar == null && useDefaultAppBar
               ? const _DefaultDrawer()
               : null,
-          body: BlocBuilder<QuranCubit, List<QuranPage>>(
-            builder: (ctx, pages) {
-              return pages.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : SafeArea(
-                      child: PageView.builder(
-                        itemCount: pages.length,
-                        controller: AppBloc.quranCubit.pageController,
-                        onPageChanged: (page) {
-                          if (onPageChanged != null) onPageChanged!(page);
-                          AppBloc.quranCubit.saveLastPage(page + 1);
-                        },
-                        pageSnapping: true,
-                        itemBuilder: (ctx, index) {
-                          List<String> newSurahs = [];
-                          return Container(
-                              height: deviceSize.height * 0.8,
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: index == 0 || index == 1
-
-                                        /// This is for first 2 pages of Quran: Al-Fatihah and Al-Baqarah
-                                        ? Center(
-                                            child: SingleChildScrollView(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  SurahHeaderWidget(pages[index]
-                                                      .ayahs[0]
-                                                      .surahNameAr),
-                                                  if (index == 1)
-                                                    const BasmallahWidget(),
-                                                  ...pages[index]
-                                                      .lines
-                                                      .map((line) {
-                                                    return BlocBuilder<
-                                                        BookmarksCubit,
-                                                        List<Bookmark>>(
-                                                      builder:
-                                                          (context, bookmarks) {
-                                                        final bookmarksAyahs =
-                                                            bookmarks
-                                                                .map((bookmark) =>
-                                                                    bookmark
-                                                                        .ayahId)
-                                                                .toList();
-                                                        return Column(
-                                                          children: [
-                                                            SizedBox(
-                                                                width: deviceSize
-                                                                        .width -
-                                                                    32,
-                                                                child:
-                                                                    QuranLine(
-                                                                  line,
-                                                                  bookmarksAyahs,
-                                                                  bookmarks,
-                                                                  boxFit: BoxFit
-                                                                      .scaleDown,
-                                                                )),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  }),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-
-                                        /// Other Quran pages
-                                        : LayoutBuilder(
-                                            builder: (context, constraints) {
-                                            return ListView(
-                                                physics: currentOrientation ==
-                                                        Orientation.portrait
-                                                    ? const NeverScrollableScrollPhysics()
-                                                    : null,
-                                                children: [
-                                                  ...pages[index]
-                                                      .lines
-                                                      .map((line) {
-                                                    bool firstAyah = false;
-                                                    if (line.ayahs[0]
-                                                                .ayahNumber ==
-                                                            1 &&
-                                                        !newSurahs.contains(line
-                                                            .ayahs[0]
-                                                            .surahNameAr)) {
-                                                      newSurahs.add(line
-                                                          .ayahs[0]
-                                                          .surahNameAr);
-                                                      firstAyah = true;
-                                                    }
-                                                    return BlocBuilder<
-                                                        BookmarksCubit,
-                                                        List<Bookmark>>(
-                                                      builder:
-                                                          (context, bookmarks) {
-                                                        final bookmarksAyahs =
-                                                            bookmarks
-                                                                .map((bookmark) =>
-                                                                    bookmark
-                                                                        .ayahId)
-                                                                .toList();
-                                                        return Column(
-                                                          children: [
-                                                            if (firstAyah)
-                                                              SurahHeaderWidget(line
-                                                                  .ayahs[0]
-                                                                  .surahNameAr),
-                                                            if (firstAyah &&
-                                                                (line.ayahs[0]
-                                                                        .surahNumber !=
-                                                                    9))
-                                                              const BasmallahWidget(),
-                                                            SizedBox(
-                                                              width: deviceSize
-                                                                      .width -
-                                                                  30,
-                                                              height: ((currentOrientation ==
-                                                                              Orientation
-                                                                                  .portrait
-                                                                          ? constraints
-                                                                              .maxHeight
-                                                                          : deviceSize
-                                                                              .width) -
-                                                                      (pages[index]
-                                                                              .numberOfNewSurahs *
-                                                                          (line.ayahs[0].surahNumber != 9
-                                                                              ? 110
-                                                                              : 80))) *
-                                                                  0.95 /
-                                                                  pages[index]
-                                                                      .lines
-                                                                      .length,
-                                                              child: QuranLine(
-                                                                line,
-                                                                bookmarksAyahs,
-                                                                bookmarks,
-                                                                boxFit: line
-                                                                        .ayahs
-                                                                        .last
-                                                                        .centered
-                                                                    ? BoxFit
-                                                                        .scaleDown
-                                                                    : BoxFit
-                                                                        .fill,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  }),
-                                                ]);
-                                          }),
-                                  ),
-                                  bottomWidget ??
-                                      (showBottomWidget
-                                          ? QuranPageBottomInfoWidget(
-                                              page: index + 1,
-                                              hizb: pages[index].hizb,
-                                              surahName: pages[index]
-                                                  .ayahs
-                                                  .last
-                                                  .surahNameAr)
-                                          : Container()),
-                                ],
-                              ));
-                        },
-                      ),
-                    );
-            },
-          ),
+          body: quranCtrl.staticPages.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : SafeArea(
+                  child: withPageView
+                      ? PageView.builder(
+                          itemCount: quranCtrl.staticPages.length,
+                          controller: quranCtrl.pageController,
+                          onPageChanged: (page) {
+                            if (onPageChanged != null) onPageChanged!(page);
+                            quranCtrl.saveLastPage(page + 1);
+                          },
+                          pageSnapping: true,
+                          itemBuilder: (ctx, index) {
+                            return _pageViewBuild(context, index, quranCtrl,
+                                deviceSize, currentOrientation);
+                          },
+                        )
+                      : _pageViewBuild(context, pageIndex!, quranCtrl,
+                          deviceSize, currentOrientation,
+                          bookmarksColor: bookmarksColor!),
+                ),
         ),
-      ),
-    );
+      );
+    });
+  }
+
+  Widget _pageViewBuild(
+      BuildContext context,
+      int pageIndex,
+      QuranController quranCtrl,
+      Size deviceSize,
+      Orientation currentOrientation,
+      {Color? bookmarksColor,
+      Function? onAyahLongPress}) {
+    List<String> newSurahs = [];
+    return Container(
+        height: deviceSize.height * 0.8,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: pageIndex == 0 || pageIndex == 1
+
+                  /// This is for first 2 pages of Quran: Al-Fatihah and Al-Baqarah
+                  ? Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SurahHeaderWidget(
+                                quranCtrl.staticPages[pageIndex].ayahs[0]
+                                    .surahNumber,
+                                isSvg: isSvg,
+                                bannerSvgPath: bannerSvgPath,
+                                bannerSvgWidth: bannerSvgWidth,
+                                bannerSvgHeight: bannerSvgHeight),
+                            if (pageIndex == 1)
+                              BasmallahWidget(
+                                surahNumber: quranCtrl.staticPages[pageIndex]
+                                    .ayahs[0].surahNumber,
+                                basmallahColor: basmallahColor,
+                                basmallahHeight: basmallahHeight,
+                                basmallahWidth: basmallahWidth,
+                              ),
+                            ...quranCtrl.staticPages[pageIndex].lines
+                                .map((line) {
+                              return GetBuilder<BookmarksController>(
+                                builder: (bookmarkCtrl) {
+                                  final bookmarksAyahs = bookmarkCtrl.bookmarks
+                                      .map((bookmark) => bookmark.ayahId)
+                                      .toList();
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                          width: deviceSize.width - 32,
+                                          child: QuranLine(
+                                            line,
+                                            bookmarksAyahs,
+                                            bookmarkCtrl.bookmarks,
+                                            boxFit: BoxFit.scaleDown,
+                                            onAyahLongPress: onAyahLongPress,
+                                            bookmarksColor: bookmarksColor,
+                                          )),
+                                    ],
+                                  );
+                                },
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                    )
+
+                  /// Other Quran pages
+                  : LayoutBuilder(builder: (context, constraints) {
+                      return ListView(
+                          physics: currentOrientation == Orientation.portrait
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          children: [
+                            ...quranCtrl.staticPages[pageIndex].lines
+                                .map((line) {
+                              bool firstAyah = false;
+                              if (line.ayahs[0].ayahNumber == 1 &&
+                                  !newSurahs
+                                      .contains(line.ayahs[0].surahNameAr)) {
+                                newSurahs.add(line.ayahs[0].surahNameAr);
+                                firstAyah = true;
+                              }
+                              return GetBuilder<BookmarksController>(
+                                builder: (bookmarkCtrl) {
+                                  final bookmarksAyahs = bookmarkCtrl.bookmarks
+                                      .map((bookmark) => bookmark.ayahId)
+                                      .toList();
+                                  return Column(
+                                    children: [
+                                      if (firstAyah)
+                                        SurahHeaderWidget(
+                                            quranCtrl.staticPages[pageIndex]
+                                                .ayahs[0].surahNumber,
+                                            isSvg: isSvg,
+                                            bannerSvgPath: bannerSvgPath,
+                                            bannerSvgWidth: bannerSvgWidth,
+                                            bannerSvgHeight: bannerSvgHeight),
+                                      if (firstAyah &&
+                                          (line.ayahs[0].surahNumber != 9))
+                                        BasmallahWidget(
+                                          surahNumber: quranCtrl
+                                              .staticPages[pageIndex]
+                                              .ayahs[0]
+                                              .surahNumber,
+                                          basmallahColor: basmallahColor,
+                                          basmallahHeight: basmallahHeight,
+                                          basmallahWidth: basmallahWidth,
+                                        ),
+                                      SizedBox(
+                                        width: deviceSize.width - 30,
+                                        height: ((currentOrientation ==
+                                                        Orientation.portrait
+                                                    ? constraints.maxHeight
+                                                    : Get.width) -
+                                                (quranCtrl
+                                                        .staticPages[pageIndex]
+                                                        .numberOfNewSurahs *
+                                                    (line.ayahs[0]
+                                                                .surahNumber !=
+                                                            9
+                                                        ? 110
+                                                        : 80))) *
+                                            0.95 /
+                                            quranCtrl.staticPages[pageIndex]
+                                                .lines.length,
+                                        child: QuranLine(
+                                          line,
+                                          bookmarksAyahs,
+                                          bookmarkCtrl.bookmarks,
+                                          boxFit: line.ayahs.last.centered
+                                              ? BoxFit.scaleDown
+                                              : BoxFit.fill,
+                                          onAyahLongPress: onAyahLongPress,
+                                          bookmarksColor: bookmarksColor,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }),
+                          ]);
+                    }),
+            ),
+            bottomWidget ??
+                (showBottomWidget
+                    ? quranCtrl.staticPages.isEmpty
+                        ? const CircularProgressIndicator()
+                        : QuranPageBottomInfoWidget(
+                            page: pageIndex + 1,
+                            hizb: quranCtrl.staticPages[pageIndex].hizb,
+                            surahName: 'kk',
+                            // quranCtrl
+                            //             .staticPages[index]
+                            //             .ayahs
+                            //             .last
+                            //             .surahNameAr,
+                          )
+                    : Container()),
+          ],
+        ));
   }
 }
 
-class _FlutterQuranSearchScreen extends StatefulWidget {
-  const _FlutterQuranSearchScreen();
-
-  @override
-  State<_FlutterQuranSearchScreen> createState() =>
-      _FlutterQuranSearchScreenState();
-}
-
-class _FlutterQuranSearchScreenState extends State<_FlutterQuranSearchScreen> {
-  List<Ayah> ayahs = [];
+class FlutterQuranSearchScreen extends StatelessWidget {
+  const FlutterQuranSearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -266,44 +321,45 @@ class _FlutterQuranSearchScreenState extends State<_FlutterQuranSearchScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                TextField(
-                  onChanged: (txt) {
-                    final searchResult = FlutterQuran().search(txt);
-                    setState(() {
-                      ayahs = [...searchResult];
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                    ),
-                    hintText: 'بحث',
-                  ),
-                ),
+                GetX<QuranController>(
+                    builder: (quranCtrl) => TextField(
+                          onChanged: (txt) {
+                            final searchResult = FlutterQuran().search(txt);
+                            quranCtrl.ayahsList.value = [...searchResult];
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                            ),
+                            hintText: 'بحث',
+                          ),
+                        )),
                 Expanded(
-                  child: ListView(
-                    children: ayahs
-                        .map((ayah) => Column(
-                              children: [
-                                ListTile(
-                                  title: Text(
-                                    ayah.ayah.replaceAll('\n', ' '),
+                  child: GetX<QuranController>(
+                    builder: (quranCtrl) => ListView(
+                      children: quranCtrl.ayahsList
+                          .map((ayah) => Column(
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      ayah.ayah.replaceAll('\n', ' '),
+                                    ),
+                                    subtitle: Text(ayah.surahNameAr),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      FlutterQuran().navigateToAyah(ayah);
+                                    },
                                   ),
-                                  subtitle: Text(ayah.surahNameAr),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                    FlutterQuran().navigateToAyah(ayah);
-                                  },
-                                ),
-                                const Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ],
-                            ))
-                        .toList(),
+                                  const Divider(
+                                    color: Colors.grey,
+                                    thickness: 1,
+                                  ),
+                                ],
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ),
               ],
