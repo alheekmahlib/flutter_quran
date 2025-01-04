@@ -16,12 +16,12 @@ class FlutterQuran {
       {List<Bookmark>? userBookmarks, bool overwriteBookmarks = false}) async {
     PreferencesUtils().preferences = await SharedPreferences.getInstance();
     // Get.put(QuranController());
-    await QuranController.instance.loadQuran();
+    await QuranCtrl.instance.loadQuran();
     BookmarksController.instance.initBookmarks(
         userBookmarks: userBookmarks, overwrite: overwriteBookmarks);
   }
 
-  final quranCtrl = QuranController.instance;
+  final quranCtrl = QuranCtrl.instance;
 
   /// [getCurrentPageNumber] Returns the page number of the page that the user is currently on.
   /// Page numbers start at 1, so the first page of the Quran is page 1.

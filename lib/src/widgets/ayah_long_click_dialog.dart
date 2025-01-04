@@ -52,7 +52,7 @@ class AyahLongClickDialog extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Clipboard.setData(ClipboardData(
-                            text: QuranController
+                            text: QuranCtrl
                                 .instance.staticPages[ayah.page - 1].ayahs
                                 .firstWhere((element) => element.id == ayah.id)
                                 .ayah))

@@ -104,7 +104,7 @@ class FlutterQuranScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     Orientation currentOrientation = MediaQuery.of(context).orientation;
-    return GetBuilder<QuranController>(builder: (quranCtrl) {
+    return GetBuilder<QuranCtrl>(builder: (quranCtrl) {
       return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -138,14 +138,9 @@ class FlutterQuranScreen extends StatelessWidget {
     });
   }
 
-  Widget _pageViewBuild(
-      BuildContext context,
-      int pageIndex,
-      QuranController quranCtrl,
-      Size deviceSize,
-      Orientation currentOrientation,
-      {Color? bookmarksColor,
-      Function? onAyahLongPress}) {
+  Widget _pageViewBuild(BuildContext context, int pageIndex,
+      QuranCtrl quranCtrl, Size deviceSize, Orientation currentOrientation,
+      {Color? bookmarksColor, Function? onAyahLongPress}) {
     List<String> newSurahs = [];
     return Container(
         height: deviceSize.height * 0.8,
@@ -321,7 +316,7 @@ class FlutterQuranSearchScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                GetX<QuranController>(
+                GetX<QuranCtrl>(
                     builder: (quranCtrl) => TextField(
                           onChanged: (txt) {
                             final searchResult = FlutterQuran().search(txt);
@@ -335,7 +330,7 @@ class FlutterQuranSearchScreen extends StatelessWidget {
                           ),
                         )),
                 Expanded(
-                  child: GetX<QuranController>(
+                  child: GetX<QuranCtrl>(
                     builder: (quranCtrl) => ListView(
                       children: quranCtrl.ayahsList
                           .map((ayah) => Column(

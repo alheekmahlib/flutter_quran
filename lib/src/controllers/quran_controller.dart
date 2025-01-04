@@ -6,11 +6,11 @@ import '../models/ayah.dart';
 import '../models/quran_page.dart';
 import '../repository/quran_repository.dart';
 
-class QuranController extends GetxController {
-  static QuranController get instance => Get.isRegistered<QuranController>()
-      ? Get.find<QuranController>()
-      : Get.put<QuranController>(QuranController());
-  QuranController({QuranRepository? quranRepository})
+class QuranCtrl extends GetxController {
+  static QuranCtrl get instance => Get.isRegistered<QuranCtrl>()
+      ? Get.find<QuranCtrl>()
+      : Get.put<QuranCtrl>(QuranCtrl());
+  QuranCtrl({QuranRepository? quranRepository})
       : _quranRepository = quranRepository ?? QuranRepository(),
         super();
 
