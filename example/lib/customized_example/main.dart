@@ -134,6 +134,8 @@ class _MyAppState extends State<MyApp> {
           bannerImagePath: null,
           bannerImageHeight: null,
           bannerImageWidth: null,
+          textColor: Colors.white,
+          surahNumber: 1,
         ),
       ),
     );

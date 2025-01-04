@@ -41,7 +41,9 @@ class FlutterQuranScreen extends StatelessWidget {
       required this.withPageView,
       this.pageIndex,
       this.bookmarksColor,
-      this.onAyahLongPress});
+      this.onAyahLongPress,
+      this.textColor,
+      required this.surahNumber});
 
   ///[showBottomWidget] is a bool to disable or enable the default bottom widget
   final bool showBottomWidget;
@@ -100,6 +102,12 @@ class FlutterQuranScreen extends StatelessWidget {
   ///[onAyahLongPress] pass the page number if you do not want to display the Quran with PageView
   final Function? onAyahLongPress;
 
+  ///[textColor] pass the page number if you do not want to display the Quran with PageView
+  final Color? textColor;
+
+  ///[surahNumber] pass the page number if you do not want to display the Quran with PageView
+  final int surahNumber;
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -108,6 +116,7 @@ class FlutterQuranScreen extends StatelessWidget {
       return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: appBar ?? (useDefaultAppBar ? AppBar(elevation: 0) : null),
           drawer: appBar == null && useDefaultAppBar
               ? const _DefaultDrawer()
@@ -125,22 +134,35 @@ class FlutterQuranScreen extends StatelessWidget {
                           },
                           pageSnapping: true,
                           itemBuilder: (ctx, index) {
-                            return _pageViewBuild(context, index, quranCtrl,
-                                deviceSize, currentOrientation);
+                            return _pageViewBuild(
+                              context,
+                              index,
+                              surahNumber,
+                              quranCtrl,
+                              deviceSize,
+                              currentOrientation,
+                              textColor: textColor!,
+                            );
                           },
                         )
-                      : _pageViewBuild(context, pageIndex!, quranCtrl,
-                          deviceSize, currentOrientation,
-                          bookmarksColor: bookmarksColor!),
+                      : _pageViewBuild(
+                          context,
+                          pageIndex!,
+                          surahNumber,
+                          quranCtrl,
+                          deviceSize,
+                          currentOrientation,
+                          textColor: textColor!,
+                        ),
                 ),
         ),
       );
     });
   }
 
-  Widget _pageViewBuild(BuildContext context, int pageIndex,
+  Widget _pageViewBuild(BuildContext context, int pageIndex, int surahNumber,
       QuranCtrl quranCtrl, Size deviceSize, Orientation currentOrientation,
-      {Color? bookmarksColor, Function? onAyahLongPress}) {
+      {Color? bookmarksColor, Color? textColor, Function? onAyahLongPress}) {
     List<String> newSurahs = [];
     return Container(
         height: deviceSize.height * 0.8,
@@ -156,9 +178,7 @@ class FlutterQuranScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SurahHeaderWidget(
-                                quranCtrl.staticPages[pageIndex].ayahs[0]
-                                    .surahNumber,
+                            SurahHeaderWidget(surahNumber,
                                 isSvg: isSvg,
                                 bannerSvgPath: bannerSvgPath,
                                 bannerSvgWidth: bannerSvgWidth,
@@ -188,7 +208,8 @@ class FlutterQuranScreen extends StatelessWidget {
                                             bookmarkCtrl.bookmarks,
                                             boxFit: BoxFit.scaleDown,
                                             onAyahLongPress: onAyahLongPress,
-                                            bookmarksColor: bookmarksColor,
+                                            // bookmarksColor: bookmarksColor,
+                                            textColor: textColor,
                                           )),
                                     ],
                                   );
@@ -224,9 +245,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                   return Column(
                                     children: [
                                       if (firstAyah)
-                                        SurahHeaderWidget(
-                                            quranCtrl.staticPages[pageIndex]
-                                                .ayahs[0].surahNumber,
+                                        SurahHeaderWidget(surahNumber,
                                             isSvg: isSvg,
                                             bannerSvgPath: bannerSvgPath,
                                             bannerSvgWidth: bannerSvgWidth,
@@ -267,7 +286,8 @@ class FlutterQuranScreen extends StatelessWidget {
                                               ? BoxFit.scaleDown
                                               : BoxFit.fill,
                                           onAyahLongPress: onAyahLongPress,
-                                          bookmarksColor: bookmarksColor,
+                                          // bookmarksColor: bookmarksColor,
+                                          textColor: textColor,
                                         ),
                                       ),
                                     ],

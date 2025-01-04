@@ -5,14 +5,16 @@ class QuranLine extends StatelessWidget {
       {super.key,
       this.boxFit = BoxFit.fill,
       this.onAyahLongPress,
-      this.bookmarksColor});
+      // this.bookmarksColor,
+      this.textColor});
 
   final Line line;
   final List<int> bookmarksAyahs;
   final List<Bookmark> bookmarks;
   final BoxFit boxFit;
   final Function? onAyahLongPress;
-  final Color? bookmarksColor;
+  // final Color? bookmarksColor;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +44,20 @@ class QuranLine extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.0),
-                    color: bookmarksColor ??
-                        (bookmarksAyahs.contains(ayah.id)
-                            ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
-                                    .colorCode)
-                                .withValues(alpha: 0.7)
-                            : null),
+                    color: (bookmarksAyahs.contains(ayah.id)
+                        ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
+                                .colorCode)
+                            .withValues(alpha: 0.7)
+                        : null),
                   ),
                   child: Text(
                     ayah.ayah,
-                    style: FlutterQuran().hafsStyle,
+                    style: TextStyle(
+                      color: textColor ?? Colors.black,
+                      fontSize: 23.55,
+                      fontFamily: "hafs",
+                      package: "flutter_quran",
+                    ),
                   ),
                 ),
               ),
