@@ -259,6 +259,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                             onAyahLongPress: onAyahLongPress,
                                             bookmarksColor: bookmarksColor,
                                             textColor: textColor,
+                                            bookmarkList: bookmarkList,
                                             ayahSelectedBackgroundColor:
                                                 ayahSelectedBackgroundColor,
                                           )),
@@ -344,6 +345,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                           onAyahLongPress: onAyahLongPress,
                                           bookmarksColor: bookmarksColor,
                                           textColor: textColor,
+                                          bookmarkList: bookmarkList,
                                           ayahSelectedBackgroundColor:
                                               ayahSelectedBackgroundColor,
                                         ),
