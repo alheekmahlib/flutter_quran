@@ -147,6 +147,7 @@ class FlutterQuranScreen extends StatelessWidget {
                               deviceSize,
                               currentOrientation,
                               textColor: textColor!,
+                              onAyahLongPress: onAyahLongPress,
                             );
                           },
                         )
@@ -159,6 +160,7 @@ class FlutterQuranScreen extends StatelessWidget {
                           deviceSize,
                           currentOrientation,
                           textColor: textColor!,
+                          onAyahLongPress: onAyahLongPress,
                         ),
                 ),
         ),
