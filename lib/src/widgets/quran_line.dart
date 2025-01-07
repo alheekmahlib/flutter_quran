@@ -35,9 +35,9 @@ class QuranLine extends StatelessWidget {
             return WidgetSpan(
               child: GestureDetector(
                 onTap: () => quranCtrl.clearSelection(),
-                onLongPressStart: (d) {
+                onLongPressStart: (details) {
                   if (onAyahLongPress != null) {
-                    onAyahLongPress!(ayah);
+                    onAyahLongPress!(details, ayah);
                     quranCtrl.toggleAyahSelection(ayah.id);
                   } else {
                     final bookmarkId = bookmarksAyahs.contains(ayah.id)
