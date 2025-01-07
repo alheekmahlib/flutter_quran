@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
       bannerImageWidth: null,
       textColor: Colors.white,
       surahNumber: 1,
+      surahNameColor: Colors.white,
     );
   }
 }

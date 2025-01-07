@@ -9,7 +9,8 @@ class SurahHeaderWidget extends StatelessWidget {
       required this.isSvg,
       required this.bannerSvgPath,
       this.bannerSvgWidth,
-      this.bannerSvgHeight});
+      this.bannerSvgHeight,
+      required this.surahNameColor});
 
   final int surahNumber;
   final String? bannerImagePath;
@@ -19,6 +20,7 @@ class SurahHeaderWidget extends StatelessWidget {
   final String bannerSvgPath;
   final double? bannerSvgWidth;
   final double? bannerSvgHeight;
+  final Color surahNameColor;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +35,9 @@ class SurahHeaderWidget extends StatelessWidget {
             ),
             SvgPicture.asset(
               'packages/flutter_quran/lib/assets/svg/surah_name/00$surahNumber.svg',
-              width: bannerSvgWidth ?? 70,
-              height: bannerSvgHeight ?? 30,
+              width: 70,
+              height: 37,
+              colorFilter: ColorFilter.mode(surahNameColor, BlendMode.srcIn),
             ),
           ],
         ),
@@ -53,8 +56,9 @@ class SurahHeaderWidget extends StatelessWidget {
         alignment: Alignment.center,
         child: SvgPicture.asset(
           'packages/flutter_quran/lib/assets/svg/surah_name/00$surahNumber.svg',
-          width: bannerSvgWidth ?? 70,
-          height: bannerSvgHeight ?? 30,
+          width: 70,
+          height: 37,
+          colorFilter: ColorFilter.mode(surahNameColor, BlendMode.srcIn),
         ),
       );
     }

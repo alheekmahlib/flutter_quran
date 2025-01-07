@@ -108,7 +108,6 @@ class QuranCtrl extends GetxController {
         }
         ayas.clear();
       }
-      // emit(staticPages);
       update();
     }
   }

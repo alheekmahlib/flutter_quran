@@ -23,6 +23,8 @@ class QuranLine extends StatelessWidget {
         child: RichText(
             text: TextSpan(
           children: line.ayahs.reversed.map((ayah) {
+            // final String lastCharacter =
+            //     ayah.ayah.substring(ayah.ayah.length - 1);
             return WidgetSpan(
               child: GestureDetector(
                 onLongPress: () {
