@@ -237,6 +237,7 @@ class FlutterQuranScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SurahHeaderWidget(
+                              ayah: quranCtrl.staticPages[pageIndex].ayahs[0],
                               surahNumber ??
                                   quranCtrl.staticPages[pageIndex].ayahs[0]
                                       .surahNumber,

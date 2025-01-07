@@ -13,8 +13,10 @@ class SurahHeaderWidget extends StatelessWidget {
       required this.surahNameColor,
       this.surahNameWidth,
       this.surahNameHeight,
-      this.onSurahBannerLongPress});
+      this.onSurahBannerLongPress,
+      required this.ayah});
 
+  final Ayah ayah;
   final int surahNumber;
   final String? bannerImagePath;
   final double? bannerImageWidth;
@@ -33,7 +35,11 @@ class SurahHeaderWidget extends StatelessWidget {
     if (isSvg) {
       return Center(
         child: GestureDetector(
-          onLongPress: onSurahBannerLongPress!(surahNumber),
+          onLongPress: () {
+            if (onSurahBannerLongPress != null) {
+              onSurahBannerLongPress!(ayah);
+            }
+          },
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -56,7 +62,7 @@ class SurahHeaderWidget extends StatelessWidget {
       return GestureDetector(
         onLongPress: () {
           if (onSurahBannerLongPress != null) {
-            onSurahBannerLongPress!(surahNumber);
+            onSurahBannerLongPress!(ayah);
           }
         },
         child: Container(
