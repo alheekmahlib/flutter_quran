@@ -86,24 +86,18 @@ class QuranLine extends StatelessWidget {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
-                      color: hasBookmark(ayah.surahNumber, ayah.id).value
-                          ? bookmarksColor
-                          : (bookmarksAyahs.contains(ayah.id)
-                              ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
-                                      .colorCode)
-                                  .withValues(alpha: 0.7)
-                              : quranCtrl.isAyahSelected
-                                  ? ayahSelectedBackgroundColor ??
-                                      Colors.amber.withValues(alpha: 0.4)
-                                  : null),
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 0.5,
-                          color: Colors.black,
-                          offset: Offset(0.5, 0.5),
-                        ),
-                      ]),
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: hasBookmark(ayah.surahNumber, ayah.id).value
+                        ? bookmarksColor
+                        : (bookmarksAyahs.contains(ayah.id)
+                            ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
+                                    .colorCode)
+                                .withValues(alpha: 0.7)
+                            : quranCtrl.isAyahSelected
+                                ? ayahSelectedBackgroundColor ??
+                                    Colors.amber.withValues(alpha: 0.4)
+                                : null),
+                  ),
                   child: Text(
                     ayah.ayah,
                     style: TextStyle(
