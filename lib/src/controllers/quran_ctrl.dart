@@ -26,6 +26,8 @@ class QuranCtrl extends GetxController {
   RxList<Ayah> ayahsList = <Ayah>[].obs;
   var selectedAyahIndexes = <int>[].obs;
   bool isAyahSelected = false;
+  RxDouble scaleFactor = 1.0.obs;
+  RxDouble baseScaleFactor = 1.0.obs;
 
   PageController _pageController = PageController();
 
@@ -158,5 +160,21 @@ class QuranCtrl extends GetxController {
   void clearSelection() {
     selectedAyahIndexes.clear();
     update();
+  }
+
+  dynamic textScale(dynamic widget1, dynamic widget2) {
+    if (scaleFactor.value <= 1.3) {
+      return widget1;
+    } else {
+      return widget2;
+    }
+  }
+
+  void updateTextScale(ScaleUpdateDetails details) {
+    double newScaleFactor = baseScaleFactor.value * details.scale;
+    if (newScaleFactor < 1.0) {
+      newScaleFactor = 1.0;
+    }
+    scaleFactor.value = newScaleFactor;
   }
 }

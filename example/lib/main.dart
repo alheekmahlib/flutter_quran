@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
       bannerImageWidth: null,
       textColor: Colors.white,
       surahNameColor: Colors.white,
+      bookmarkList: [],
     );
   }
 }

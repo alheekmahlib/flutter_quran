@@ -48,7 +48,9 @@ class FlutterQuranScreen extends StatelessWidget {
       this.ayahSelectedBackgroundColor,
       this.surahNameWidth,
       this.surahNameHeight,
-      this.bookmarkList});
+      this.bookmarkList,
+      this.onSurahBannerLongPress,
+      this.onAyahPress});
 
   ///[showBottomWidget] is a bool to disable or enable the default bottom widget
   final bool showBottomWidget;
@@ -106,6 +108,12 @@ class FlutterQuranScreen extends StatelessWidget {
 
   ///[onAyahLongPress] When you long press on any verse, you can add some features, such as copying the verse, sharing it, etc
   final Function? onAyahLongPress;
+
+  ///[onSurahBannerLongPress] When you long press on any Surah banner, you can add some details about the surah
+  final Function? onSurahBannerLongPress;
+
+  ///[onAyahPress] When you press on any verse, you can add some features, such as copying the verse, sharing it, etc
+  final Function? onAyahPress;
 
   ///[textColor] You can pass the color of the Quran text
   final Color? textColor;
@@ -168,6 +176,8 @@ class FlutterQuranScreen extends StatelessWidget {
                               bookmarkList: bookmarkList,
                               ayahSelectedBackgroundColor:
                                   ayahSelectedBackgroundColor,
+                              onSurahBannerLongPress: onSurahBannerLongPress,
+                              onAyahPress: onAyahPress,
                             );
                           },
                         )
@@ -185,6 +195,8 @@ class FlutterQuranScreen extends StatelessWidget {
                           bookmarkList: bookmarkList,
                           ayahSelectedBackgroundColor:
                               ayahSelectedBackgroundColor,
+                          onSurahBannerLongPress: onSurahBannerLongPress,
+                          onAyahPress: onAyahPress,
                         ),
                 ),
         ),
@@ -204,7 +216,9 @@ class FlutterQuranScreen extends StatelessWidget {
       Color? textColor,
       Color? ayahSelectedBackgroundColor,
       List? bookmarkList,
-      Function? onAyahLongPress}) {
+      Function? onAyahLongPress,
+      Function? onSurahBannerLongPress,
+      Function? onAyahPress}) {
     List<String> newSurahs = [];
     return Container(
         height: deviceSize.height * 0.8,
@@ -213,6 +227,7 @@ class FlutterQuranScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
+              flex: 20,
               child: pageIndex == 0 || pageIndex == 1
 
                   /// This is for first 2 pages of Quran: Al-Fatihah and Al-Baqarah
@@ -222,16 +237,21 @@ class FlutterQuranScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SurahHeaderWidget(
-                                surahNumber ??
-                                    quranCtrl.staticPages[pageIndex].ayahs[0]
-                                        .surahNumber,
-                                isSvg: isSvg,
-                                bannerSvgPath: bannerSvgPath,
-                                bannerSvgWidth: bannerSvgWidth,
-                                bannerSvgHeight: bannerSvgHeight,
-                                surahNameWidth: surahNameWidth,
-                                surahNameHeight: surahNameHeight,
-                                surahNameColor: surahNameColor),
+                              surahNumber ??
+                                  quranCtrl.staticPages[pageIndex].ayahs[0]
+                                      .surahNumber,
+                              isSvg: isSvg,
+                              bannerSvgPath: bannerSvgPath,
+                              bannerSvgWidth: bannerSvgWidth,
+                              bannerSvgHeight: bannerSvgHeight,
+                              surahNameWidth: surahNameWidth,
+                              surahNameHeight: surahNameHeight,
+                              surahNameColor: surahNameColor,
+                              bannerImageHeight: bannerImageHeight,
+                              bannerImageWidth: bannerImageWidth,
+                              bannerImagePath: bannerImagePath,
+                              onSurahBannerLongPress: onSurahBannerLongPress,
+                            ),
                             if (pageIndex == 1)
                               BasmallahWidget(
                                 surahNumber: quranCtrl.staticPages[pageIndex]
@@ -262,6 +282,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                             bookmarkList: bookmarkList,
                                             ayahSelectedBackgroundColor:
                                                 ayahSelectedBackgroundColor,
+                                            onAyahPress: onAyahPress,
                                           )),
                                     ],
                                   );
@@ -298,15 +319,21 @@ class FlutterQuranScreen extends StatelessWidget {
                                     children: [
                                       if (firstAyah)
                                         SurahHeaderWidget(
-                                            surahNumber ??
-                                                line.ayahs[0].surahNumber,
-                                            isSvg: isSvg,
-                                            bannerSvgPath: bannerSvgPath,
-                                            bannerSvgWidth: bannerSvgWidth,
-                                            bannerSvgHeight: bannerSvgHeight,
-                                            surahNameWidth: surahNameWidth,
-                                            surahNameHeight: surahNameHeight,
-                                            surahNameColor: surahNameColor),
+                                          surahNumber ??
+                                              line.ayahs[0].surahNumber,
+                                          isSvg: isSvg,
+                                          bannerSvgPath: bannerSvgPath,
+                                          bannerSvgWidth: bannerSvgWidth,
+                                          bannerSvgHeight: bannerSvgHeight,
+                                          surahNameWidth: surahNameWidth,
+                                          surahNameHeight: surahNameHeight,
+                                          surahNameColor: surahNameColor,
+                                          bannerImageHeight: bannerImageHeight,
+                                          bannerImageWidth: bannerImageWidth,
+                                          bannerImagePath: bannerImagePath,
+                                          onSurahBannerLongPress:
+                                              onSurahBannerLongPress,
+                                        ),
                                       if (firstAyah &&
                                           (line.ayahs[0].surahNumber != 9))
                                         BasmallahWidget(
@@ -348,6 +375,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                           bookmarkList: bookmarkList,
                                           ayahSelectedBackgroundColor:
                                               ayahSelectedBackgroundColor,
+                                          onAyahPress: onAyahPress,
                                         ),
                                       ),
                                     ],
@@ -358,17 +386,20 @@ class FlutterQuranScreen extends StatelessWidget {
                           ]);
                     }),
             ),
-            bottomWidget ??
-                (showBottomWidget
-                    ? quranCtrl.staticPages.isEmpty
-                        ? const CircularProgressIndicator()
-                        : QuranPageBottomInfoWidget(
-                            page: pageIndex + 1,
-                            hizb: quranCtrl.staticPages[pageIndex].hizb,
-                            surahName: quranCtrl.staticPages[pageIndex].lines
-                                .last.ayahs[0].surahNameAr,
-                          )
-                    : const SizedBox.shrink()),
+            // Expanded(
+            //   flex: 1,
+            //   child: bottomWidget ??
+            //       (showBottomWidget
+            //           ? quranCtrl.staticPages.isEmpty
+            //               ? const CircularProgressIndicator()
+            //               : QuranPageBottomInfoWidget(
+            //                   page: pageIndex + 1,
+            //                   hizb: quranCtrl.staticPages[pageIndex].hizb,
+            //                   surahName: quranCtrl.staticPages[pageIndex].lines
+            //                       .last.ayahs[0].surahNameAr,
+            //                 )
+            //           : const SizedBox.shrink()),
+            // ),
           ],
         ));
   }
