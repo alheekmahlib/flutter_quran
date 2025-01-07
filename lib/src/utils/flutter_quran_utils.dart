@@ -38,10 +38,9 @@ class FlutterQuran {
   /// open quran screen it will start from this ayah's page
   void navigateToAyah(Ayah ayah) {
     quranCtrl.animateToPage(ayah.page - 1);
-    BookmarksCtrl.instance
-        .saveBookmark(ayahId: ayah.id, page: ayah.page, bookmarkId: 3);
+    quranCtrl.toggleAyahSelection(ayah.id);
     Future.delayed(const Duration(seconds: 3))
-        .then((value) => BookmarksCtrl.instance.removeBookmark(3));
+        .then((_) => quranCtrl.toggleAyahSelection(ayah.id));
   }
 
   /// [navigateToPage] let's you navigate to any quran page with page number

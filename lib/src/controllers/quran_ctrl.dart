@@ -24,6 +24,8 @@ class QuranCtrl extends GetxController {
   int lastPage = 1;
   int? initialPage;
   RxList<Ayah> ayahsList = <Ayah>[].obs;
+  var selectedAyahIndexes = <int>[].obs;
+  bool isAyahSelected = false;
 
   PageController _pageController = PageController();
 
@@ -138,4 +140,23 @@ class QuranCtrl extends GetxController {
   }
 
   get pageController => _pageController;
+
+  void toggleAyahSelection(int index) {
+    if (selectedAyahIndexes.contains(index)) {
+      selectedAyahIndexes.remove(index);
+      update();
+    } else {
+      selectedAyahIndexes.clear();
+      selectedAyahIndexes.add(index);
+      selectedAyahIndexes.refresh();
+      update();
+    }
+    selectedAyahIndexes.refresh();
+    update();
+  }
+
+  void clearSelection() {
+    selectedAyahIndexes.clear();
+    update();
+  }
 }

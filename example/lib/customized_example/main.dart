@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
                               ))),
                     ),
                     ExpansionTile(
-                      title: Text("العلامات",
+                      title: const Text("العلامات",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       expandedCrossAxisAlignment: CrossAxisAlignment.start,
                       children: usedBookmarks
@@ -135,7 +135,6 @@ class _MyAppState extends State<MyApp> {
           bannerImageHeight: null,
           bannerImageWidth: null,
           textColor: Colors.white,
-          surahNumber: 1,
           surahNameColor: Colors.white,
         ),
       ),

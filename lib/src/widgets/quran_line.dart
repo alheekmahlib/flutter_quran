@@ -1,20 +1,24 @@
 part of '../flutter_quran_screen.dart';
 
 class QuranLine extends StatelessWidget {
-  const QuranLine(this.line, this.bookmarksAyahs, this.bookmarks,
+  QuranLine(this.line, this.bookmarksAyahs, this.bookmarks,
       {super.key,
       this.boxFit = BoxFit.fill,
       this.onAyahLongPress,
-      // this.bookmarksColor,
-      this.textColor});
+      this.bookmarksColor,
+      this.textColor,
+      this.ayahSelectedBackgroundColor});
+
+  final quranCtrl = QuranCtrl.instance;
 
   final Line line;
   final List<int> bookmarksAyahs;
   final List<Bookmark> bookmarks;
   final BoxFit boxFit;
   final Function? onAyahLongPress;
-  // final Color? bookmarksColor;
+  final Color? bookmarksColor;
   final Color? textColor;
+  final Color? ayahSelectedBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +27,17 @@ class QuranLine extends StatelessWidget {
         child: RichText(
             text: TextSpan(
           children: line.ayahs.reversed.map((ayah) {
+            quranCtrl.isAyahSelected =
+                quranCtrl.selectedAyahIndexes.contains(ayah.id);
             // final String lastCharacter =
             //     ayah.ayah.substring(ayah.ayah.length - 1);
             return WidgetSpan(
               child: GestureDetector(
+                onTap: () => quranCtrl.clearSelection(),
                 onLongPress: () {
                   if (onAyahLongPress != null) {
                     onAyahLongPress!(ayah);
+                    quranCtrl.toggleAyahSelection(ayah.id);
                   } else {
                     final bookmarkId = bookmarksAyahs.contains(ayah.id)
                         ? bookmarks[bookmarksAyahs.indexOf(ayah.id)].id
@@ -50,7 +58,10 @@ class QuranLine extends StatelessWidget {
                         ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
                                 .colorCode)
                             .withValues(alpha: 0.7)
-                        : null),
+                        : quranCtrl.isAyahSelected
+                            ? ayahSelectedBackgroundColor ??
+                                Colors.amber.withValues(alpha: 0.4)
+                            : null),
                   ),
                   child: Text(
                     ayah.ayah,
