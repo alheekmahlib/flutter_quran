@@ -15,6 +15,7 @@ class QuranLine extends StatelessWidget {
   final List<int> bookmarksAyahs;
   final List<Bookmark> bookmarks;
   final BoxFit boxFit;
+  // LongPressStartDetailsFunction? onAyahLongPress,
   final Function? onAyahLongPress;
   final Color? bookmarksColor;
   final Color? textColor;
@@ -34,7 +35,7 @@ class QuranLine extends StatelessWidget {
             return WidgetSpan(
               child: GestureDetector(
                 onTap: () => quranCtrl.clearSelection(),
-                onLongPress: () {
+                onLongPressStart: (d) {
                   if (onAyahLongPress != null) {
                     onAyahLongPress!(ayah);
                     quranCtrl.toggleAyahSelection(ayah.id);
@@ -80,3 +81,5 @@ class QuranLine extends StatelessWidget {
         )));
   }
 }
+
+// typedef LongPressStartDetailsFunction = void Function(LongPressStartDetails)?;
