@@ -47,7 +47,8 @@ class FlutterQuranScreen extends StatelessWidget {
       required this.surahNameColor,
       this.ayahSelectedBackgroundColor,
       this.surahNameWidth,
-      this.surahNameHeight});
+      this.surahNameHeight,
+      this.bookmarkList});
 
   ///[showBottomWidget] is a bool to disable or enable the default bottom widget
   final bool showBottomWidget;
@@ -124,6 +125,9 @@ class FlutterQuranScreen extends StatelessWidget {
   ///[surahNameHeight] if you wanna add the height for the surah name
   final double? surahNameHeight;
 
+  ///[bookmarkList] if you wanna add the height for the surah name
+  final List? bookmarkList;
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -161,6 +165,7 @@ class FlutterQuranScreen extends StatelessWidget {
                               textColor: textColor!,
                               onAyahLongPress: onAyahLongPress,
                               bookmarksColor: bookmarksColor,
+                              bookmarkList: bookmarkList,
                               ayahSelectedBackgroundColor:
                                   ayahSelectedBackgroundColor,
                             );
@@ -177,6 +182,7 @@ class FlutterQuranScreen extends StatelessWidget {
                           textColor: textColor!,
                           onAyahLongPress: onAyahLongPress,
                           bookmarksColor: bookmarksColor,
+                          bookmarkList: bookmarkList,
                           ayahSelectedBackgroundColor:
                               ayahSelectedBackgroundColor,
                         ),
@@ -197,6 +203,7 @@ class FlutterQuranScreen extends StatelessWidget {
       {Color? bookmarksColor,
       Color? textColor,
       Color? ayahSelectedBackgroundColor,
+      List? bookmarkList,
       Function? onAyahLongPress}) {
     List<String> newSurahs = [];
     return Container(

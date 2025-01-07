@@ -7,6 +7,7 @@ class BookmarksCtrl extends GetxController {
   static BookmarksCtrl get instance => Get.isRegistered<BookmarksCtrl>()
       ? Get.find<BookmarksCtrl>()
       : Get.put<BookmarksCtrl>(BookmarksCtrl());
+
   BookmarksCtrl({QuranRepository? quranRepository})
       : _quranRepository = quranRepository ?? QuranRepository(),
         super();

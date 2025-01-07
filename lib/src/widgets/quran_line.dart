@@ -7,7 +7,8 @@ class QuranLine extends StatelessWidget {
       this.onAyahLongPress,
       this.bookmarksColor,
       this.textColor,
-      this.ayahSelectedBackgroundColor});
+      this.ayahSelectedBackgroundColor,
+      this.bookmarkList});
 
   final quranCtrl = QuranCtrl.instance;
 
@@ -20,9 +21,19 @@ class QuranLine extends StatelessWidget {
   final Color? bookmarksColor;
   final Color? textColor;
   final Color? ayahSelectedBackgroundColor;
+  final List? bookmarkList;
 
   @override
   Widget build(BuildContext context) {
+    RxBool hasBookmark(int surahNum, int ayahUQNum) {
+      return (bookmarkList!.firstWhereOrNull(((element) =>
+                  element.surahNumber == surahNum &&
+                  element.ayahUQNumber == ayahUQNum)) !=
+              null)
+          ? true.obs
+          : false.obs;
+    }
+
     return FittedBox(
         fit: boxFit,
         child: RichText(
@@ -55,14 +66,16 @@ class QuranLine extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.0),
-                    color: (bookmarksAyahs.contains(ayah.id)
-                        ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
-                                .colorCode)
-                            .withValues(alpha: 0.7)
-                        : quranCtrl.isAyahSelected
-                            ? ayahSelectedBackgroundColor ??
-                                Colors.amber.withValues(alpha: 0.4)
-                            : null),
+                    color: hasBookmark(ayah.surahNumber, ayah.id).value
+                        ? bookmarksColor
+                        : (bookmarksAyahs.contains(ayah.id)
+                            ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
+                                    .colorCode)
+                                .withValues(alpha: 0.7)
+                            : quranCtrl.isAyahSelected
+                                ? ayahSelectedBackgroundColor ??
+                                    Colors.amber.withValues(alpha: 0.4)
+                                : null),
                   ),
                   child: Text(
                     ayah.ayah,
