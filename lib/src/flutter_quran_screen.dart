@@ -320,6 +320,8 @@ class FlutterQuranScreen extends StatelessWidget {
                                     children: [
                                       if (firstAyah)
                                         SurahHeaderWidget(
+                                          ayah: quranCtrl
+                                              .staticPages[pageIndex].ayahs[0],
                                           surahNumber ??
                                               line.ayahs[0].surahNumber,
                                           isSvg: isSvg,
