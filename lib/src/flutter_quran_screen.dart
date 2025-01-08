@@ -232,7 +232,7 @@ class FlutterQuranScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SurahHeaderWidget(
-                      ayah: quranCtrl.staticPages[pageIndex].ayahs,
+                      ayah: quranCtrl.staticPages[pageIndex].ayahs[0],
                       surahNumber ??
                           quranCtrl.staticPages[pageIndex].ayahs[0].surahNumber,
                       isSvg: isSvg,
@@ -311,7 +311,8 @@ class FlutterQuranScreen extends StatelessWidget {
                             children: [
                               if (firstAyah)
                                 SurahHeaderWidget(
-                                  ayah: quranCtrl.staticPages[pageIndex].ayahs,
+                                  ayah:
+                                      quranCtrl.staticPages[pageIndex].ayahs[0],
                                   surahNumber ?? line.ayahs[0].surahNumber,
                                   isSvg: isSvg,
                                   bannerSvgPath: bannerSvgPath,
