@@ -3,7 +3,7 @@ part of '../flutter_quran_screen.dart';
 class AyahLongClickDialog extends StatelessWidget {
   const AyahLongClickDialog(this.ayah, {super.key});
 
-  final Ayah ayah;
+  final AyahModel ayah;
 
   @override
   Widget build(BuildContext context) {

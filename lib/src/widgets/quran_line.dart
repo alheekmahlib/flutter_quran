@@ -15,7 +15,7 @@ class QuranLine extends StatelessWidget {
 
   final Line line;
   final List<int> bookmarksAyahs;
-  final List<Bookmark> bookmarks;
+  final List<BookmarkModel> bookmarks;
   final BoxFit boxFit;
   final Function? onAyahLongPress;
   final Function? onAyahPress;

@@ -13,17 +13,18 @@ class BookmarksCtrl extends GetxController {
         super();
 
   final QuranRepository _quranRepository;
-  final Bookmark searchBookmark =
-      Bookmark(id: 3, colorCode: 0xFFF7EFE0, name: 'search Bookmark');
+  final BookmarkModel searchBookmark =
+      BookmarkModel(id: 3, colorCode: 0xFFF7EFE0, name: 'search Bookmark');
 
-  final List<Bookmark> _defaultBookmarks = [
-    Bookmark(id: 0, colorCode: 0xAAFFD354, name: 'العلامة الصفراء'),
-    Bookmark(id: 1, colorCode: 0xAAF36077, name: 'العلامة الحمراء'),
-    Bookmark(id: 2, colorCode: 0xAA00CD00, name: 'العلامة الخضراء'),
+  final List<BookmarkModel> _defaultBookmarks = [
+    BookmarkModel(id: 0, colorCode: 0xAAFFD354, name: 'العلامة الصفراء'),
+    BookmarkModel(id: 1, colorCode: 0xAAF36077, name: 'العلامة الحمراء'),
+    BookmarkModel(id: 2, colorCode: 0xAA00CD00, name: 'العلامة الخضراء'),
   ];
-  List<Bookmark> bookmarks = [];
+  List<BookmarkModel> bookmarks = [];
 
-  void initBookmarks({List<Bookmark>? userBookmarks, bool overwrite = false}) {
+  void initBookmarks(
+      {List<BookmarkModel>? userBookmarks, bool overwrite = false}) {
     if (overwrite) {
       bookmarks = [...(userBookmarks ?? _defaultBookmarks), searchBookmark];
     } else {

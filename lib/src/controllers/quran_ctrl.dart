@@ -20,10 +20,10 @@ class QuranCtrl extends GetxController {
   RxList<int> quranStops = <int>[].obs;
   RxList<int> surahsStart = <int>[].obs;
   RxList<Surah> surahs = <Surah>[].obs;
-  final RxList<Ayah> ayahs = <Ayah>[].obs;
+  final RxList<AyahModel> ayahs = <AyahModel>[].obs;
   int lastPage = 1;
   int? initialPage;
-  RxList<Ayah> ayahsList = <Ayah>[].obs;
+  RxList<AyahModel> ayahsList = <AyahModel>[].obs;
   var selectedAyahIndexes = <int>[].obs;
   bool isAyahSelected = false;
   RxDouble scaleFactor = 1.0.obs;
@@ -48,9 +48,9 @@ class QuranCtrl extends GetxController {
       final quranJson = await _quranRepository.getQuran();
       int hizb = 1;
       int surahsIndex = 1;
-      List<Ayah> thisSurahAyahs = [];
+      List<AyahModel> thisSurahAyahs = [];
       for (int i = 0; i < quranJson.length; i++) {
-        final ayah = Ayah.fromJson(quranJson[i]);
+        final ayah = AyahModel.fromJson(quranJson[i]);
         if (ayah.surahNumber != surahsIndex) {
           surahs.last.endPage = ayahs.last.page;
           surahs.last.ayahs = thisSurahAyahs;
@@ -83,8 +83,8 @@ class QuranCtrl extends GetxController {
       surahs.last.endPage = ayahs.last.page;
       surahs.last.ayahs = thisSurahAyahs;
       for (QuranPage staticPage in staticPages) {
-        List<Ayah> ayas = [];
-        for (Ayah aya in staticPage.ayahs) {
+        List<AyahModel> ayas = [];
+        for (AyahModel aya in staticPage.ayahs) {
           if (aya.ayahNumber == 1 && ayas.isNotEmpty) {
             ayas.clear();
           }
@@ -95,7 +95,7 @@ class QuranCtrl extends GetxController {
               if ((aya.centered && i == lines.length - 2)) {
                 centered = true;
               }
-              final a = Ayah.fromAya(
+              final a = AyahModel.fromAya(
                   ayah: aya,
                   aya: lines[i],
                   ayaText: lines[i],
@@ -116,7 +116,7 @@ class QuranCtrl extends GetxController {
     }
   }
 
-  List<Ayah> search(String searchText) {
+  List<AyahModel> search(String searchText) {
     if (searchText.isEmpty) {
       return [];
     } else {

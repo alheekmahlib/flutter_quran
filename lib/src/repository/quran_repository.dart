@@ -21,12 +21,12 @@ class QuranRepository {
 
   int? getLastPage() => PreferencesUtils().getInt(Preferences().lastPage);
 
-  Future<bool> saveBookmarks(List<Bookmark> bookmarks) =>
+  Future<bool> saveBookmarks(List<BookmarkModel> bookmarks) =>
       PreferencesUtils().setStringList(Preferences().bookmarks,
           bookmarks.map((bookmark) => json.encode(bookmark.toJson())).toList());
 
-  List<Bookmark> getBookmarks() =>
+  List<BookmarkModel> getBookmarks() =>
       (PreferencesUtils().getStringList(Preferences().bookmarks) ?? [])
-          .map((bookmark) => Bookmark.fromJson(json.decode(bookmark)))
+          .map((bookmark) => BookmarkModel.fromJson(json.decode(bookmark)))
           .toList();
 }

@@ -16,7 +16,7 @@ class SurahHeaderWidget extends StatelessWidget {
       this.onSurahBannerLongPress,
       required this.ayah});
 
-  final Ayah ayah;
+  final AyahModel ayah;
   final int surahNumber;
   final String? bannerImagePath;
   final double? bannerImageWidth;

@@ -3,7 +3,7 @@ import 'ayah.dart';
 class QuranPage {
   final int pageNumber;
   int numberOfNewSurahs;
-  List<Ayah> ayahs;
+  List<AyahModel> ayahs;
   List<Line> lines;
   int? hizb;
   bool hasSajda, lastLine;
@@ -20,7 +20,7 @@ class QuranPage {
 }
 
 class Line {
-  List<Ayah> ayahs;
+  List<AyahModel> ayahs;
   bool centered;
 
   Line(this.ayahs, {this.centered = false});

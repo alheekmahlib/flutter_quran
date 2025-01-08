@@ -1,9 +1,9 @@
-class Bookmark {
+class BookmarkModel {
   final int id, colorCode;
   int ayahId = -1, page = -1;
   final String name;
 
-  Bookmark({
+  BookmarkModel({
     required this.id,
     required this.colorCode,
     required this.name,
@@ -17,7 +17,7 @@ class Bookmark {
         'name': name,
       };
 
-  factory Bookmark.fromJson(Map<String, dynamic> json) => Bookmark(
+  factory BookmarkModel.fromJson(Map<String, dynamic> json) => BookmarkModel(
         id: json['id'],
         colorCode: json['color'],
         name: json['name'] ?? '',

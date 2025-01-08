@@ -1,6 +1,6 @@
 import 'package:flutter_quran/src/utils/string_extensions.dart';
 
-class Ayah {
+class AyahModel {
   final int id,
       jozz,
       surahNumber,
@@ -15,7 +15,7 @@ class Ayah {
   final bool sajda;
   bool centered;
 
-  Ayah({
+  AyahModel({
     required this.id,
     required this.jozz,
     required this.surahNumber,
@@ -52,14 +52,14 @@ class Ayah {
   String toString() =>
       "\"id\": $id, \"jozz\": $jozz,\"sora\": $surahNumber,\"page\": $page,\"line_start\": $lineStart,\"line_end\": $lineEnd,\"aya_no\": $ayahNumber,\"sora_name_en\": \"$surahNameEn\",\"sora_name_ar\": \"$surahNameAr\",\"aya_text\": \"${ayah.replaceAll("\n", "\\n")}\",\"aya_text_emlaey\": \"${ayahText.replaceAll("\n", "\\n")}\",\"centered\": $centered";
 
-  factory Ayah.fromJson(Map<String, dynamic> json) {
+  factory AyahModel.fromJson(Map<String, dynamic> json) {
     String ayahText = json['aya_text'];
     if (ayahText[ayahText.length - 1] == '\n') {
       ayahText = ayahText.insert(' ', ayahText.length - 1);
     } else {
       ayahText = '$ayahText ';
     }
-    return Ayah(
+    return AyahModel(
       id: json['id'],
       jozz: json['jozz'],
       surahNumber: json['sura_no'] ?? 0,
@@ -78,13 +78,13 @@ class Ayah {
     );
   }
 
-  factory Ayah.fromAya({
-    required Ayah ayah,
+  factory AyahModel.fromAya({
+    required AyahModel ayah,
     required String aya,
     required String ayaText,
     bool centered = false,
   }) =>
-      Ayah(
+      AyahModel(
         id: ayah.id,
         jozz: ayah.jozz,
         surahNumber: ayah.surahNumber,

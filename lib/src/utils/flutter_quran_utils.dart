@@ -13,7 +13,8 @@ class FlutterQuran {
   /// [init] initializes the FlutterQuran, and must be called before starting using the package
 
   Future<void> init(
-      {List<Bookmark>? userBookmarks, bool overwriteBookmarks = false}) async {
+      {List<BookmarkModel>? userBookmarks,
+      bool overwriteBookmarks = false}) async {
     PreferencesUtils().preferences = await SharedPreferences.getInstance();
     // Get.put(QuranController());
     await QuranCtrl.instance.loadQuran();
@@ -30,13 +31,13 @@ class FlutterQuran {
   /// [search] Searches the Quran for the given text.
   ///
   /// Returns a list of all Ayahs whose text contains the given text.
-  List<Ayah> search(String text) => quranCtrl.search(text);
+  List<AyahModel> search(String text) => quranCtrl.search(text);
 
   /// [navigateToAyah] let's you navigate to any ayah..
   /// It's better to call this method while Quran screen is displayed
   /// and if it's called and the Quran screen is not displayed, the next time you
   /// open quran screen it will start from this ayah's page
-  void navigateToAyah(Ayah ayah) {
+  void navigateToAyah(AyahModel ayah) {
     quranCtrl.animateToPage(ayah.page - 1);
     quranCtrl.toggleAyahSelection(ayah.id);
     Future.delayed(const Duration(seconds: 3))
@@ -62,7 +63,7 @@ class FlutterQuran {
 
   /// [navigateToBookmark] let's you navigate to a certain bookmark
   /// Note that bookmark page number must be between 1 and 604
-  void navigateToBookmark(Bookmark bookmark) {
+  void navigateToBookmark(BookmarkModel bookmark) {
     if (bookmark.page > 0 && bookmark.page <= 604) {
       navigateToPage(bookmark.page);
     } else {
@@ -95,11 +96,11 @@ class FlutterQuran {
       .toList();
 
   ///[getAllBookmarks] returns list of all bookmarks
-  List<Bookmark> getAllBookmarks() => BookmarksCtrl.instance.bookmarks
+  List<BookmarkModel> getAllBookmarks() => BookmarksCtrl.instance.bookmarks
       .sublist(0, BookmarksCtrl.instance.bookmarks.length - 1);
 
   ///[getUsedBookmarks] returns list of all bookmarks used and set by the user in quran pages
-  List<Bookmark> getUsedBookmarks() =>
+  List<BookmarkModel> getUsedBookmarks() =>
       BookmarksCtrl.instance.bookmarks.where((b) => b.page != -1).toList();
 
   /// Sets a bookmark with the given [ayahId], [page] and [bookmarkId].
