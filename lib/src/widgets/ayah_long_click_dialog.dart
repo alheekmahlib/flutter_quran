@@ -28,26 +28,37 @@ class AyahLongClickDialog extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                ...BookmarksCtrl.instance.bookmarks
-                    .sublist(0, 3)
-                    .map((bookmark) => ListTile(
-                          leading: Icon(
-                            Icons.bookmark,
-                            color: Color(bookmark.colorCode),
-                          ),
-                          title: Text(
-                            bookmark.name,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          onTap: () {
-                            BookmarksCtrl.instance.saveBookmark(
-                                ayahId: ayah.id,
-                                page: ayah.page,
-                                bookmarkId: bookmark.id);
-                            Navigator.of(context).pop();
-                          },
-                        )),
+                ...[0xAAFFD354, 0xAAF36077, 0xAA00CD00].map((colorCode) {
+                  // أزرار لإضافة العلامة بناءً على اللون
+                  return ListTile(
+                    leading: Icon(
+                      Icons.bookmark,
+                      color: Color(colorCode),
+                    ),
+                    title: Text(
+                      colorCode == 0xAAFFD354
+                          ? 'العلامة الصفراء'
+                          : colorCode == 0xAAF36077
+                              ? 'العلامة الحمراء'
+                              : 'العلامة الخضراء',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onTap: () {
+                      // إضافة العلامة الجديدة
+                      BookmarksCtrl.instance.saveBookmark(
+                        surahName: ayah.surahNameAr,
+                        ayahNumber: ayah.ayahNumber,
+                        ayahId: ayah.id,
+                        page: ayah.page,
+                        colorCode: colorCode,
+                      );
+                      Navigator.of(context).pop();
+                    },
+                  );
+                }).toList(),
                 const Divider(),
                 InkWell(
                   onTap: () {

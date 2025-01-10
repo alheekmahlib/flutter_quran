@@ -16,7 +16,7 @@ class FlutterQuran {
   /// [init] initializes the FlutterQuran, and must be called before starting using the package
 
   Future<void> init(
-      {List<BookmarkModel>? userBookmarks,
+      {Map<int, List<BookmarkModel>>? userBookmarks,
       bool overwriteBookmarks = false}) async {
     PreferencesUtils().preferences = await SharedPreferences.getInstance();
     // Get.put(QuranController());
@@ -123,13 +123,20 @@ class FlutterQuran {
 
   /// [getAllSurahs] يعيد قائمة بأسماء جميع سور القرآن.
   /// [getAllBookmarks] returns list of all bookmarks
-  List<BookmarkModel> getAllBookmarks() => BookmarksCtrl.instance.bookmarks
-      .sublist(0, BookmarksCtrl.instance.bookmarks.length - 1);
+  List<BookmarkModel> getAllBookmarks() {
+    final allBookmarks =
+        BookmarksCtrl.instance.bookmarks.values.expand((list) => list).toList();
+    return allBookmarks.sublist(0, allBookmarks.length - 1);
+  }
 
   /// [getUsedBookmarks] يعيد قائمة بجميع العلامات المرجعية التي استخدمها وقام بتعيينها المستخدم في صفحات القرآن.
   /// [getUsedBookmarks] returns list of all bookmarks used and set by the user in quran pages
-  List<BookmarkModel> getUsedBookmarks() =>
-      BookmarksCtrl.instance.bookmarks.where((b) => b.page != -1).toList();
+  List<BookmarkModel> getUsedBookmarks() {
+    return BookmarksCtrl.instance.bookmarks.values
+        .expand((list) => list)
+        .where((bookmark) => bookmark.page != -1)
+        .toList();
+  }
 
   /// [getSurahInfo] للحصول على معلومات السورة في نافذة حوار، قم فقط باستدعاء `getSurahInfo`.
   /// مطلوب تمرير رقم السورة [surahNumber].
@@ -156,9 +163,17 @@ class FlutterQuran {
   ///
   /// You can't save a bookmark with a page number that is not between 1 and 604.
   void setBookmark(
-          {required int ayahId, required int page, required int bookmarkId}) =>
-      BookmarksCtrl.instance
-          .saveBookmark(ayahId: ayahId, page: page, bookmarkId: bookmarkId);
+          {required String surahName,
+          required int ayahNumber,
+          required int ayahId,
+          required int page,
+          required int bookmarkId}) =>
+      BookmarksCtrl.instance.saveBookmark(
+          surahName: surahName,
+          ayahNumber: ayahNumber,
+          ayahId: ayahId,
+          page: page,
+          colorCode: bookmarkId);
 
   /// يزيل علامة مرجعية من قائمة العلامات المرجعية المحفوظة للمستخدم.
   /// [bookmarkId] هو معرّف العلامة المرجعية التي سيتم إزالتها.

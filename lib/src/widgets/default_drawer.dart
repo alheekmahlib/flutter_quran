@@ -83,24 +83,59 @@ class _DefaultDrawer extends StatelessWidget {
             title: const Text('العلامات'),
             expandedCrossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: FlutterQuran()
-                    .getUsedBookmarks()
-                    .map((bookmark) => ListTile(
-                          leading: Icon(
-                            Icons.bookmark,
-                            color: Color(bookmark.colorCode),
-                          ),
-                          title: Text(
-                            bookmark.name,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          onTap: () =>
-                              FlutterQuran().navigateToBookmark(bookmark),
-                        ))
-                    .toList(),
-              ),
+              ...BookmarksCtrl.instance.bookmarks.entries.map((entry) {
+                final colorCode = entry.key; // اللون
+                final bookmarks = entry.value; // قائمة العلامات لهذا اللون
+
+                return ExpansionTile(
+                  title: Text(
+                    colorCode == 0xAAFFD354
+                        ? 'العلامات الصفراء'
+                        : colorCode == 0xAAF36077
+                            ? 'العلامات الحمراء'
+                            : 'العلامات الخضراء',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  leading: Icon(
+                    Icons.bookmark,
+                    color: Color(colorCode),
+                  ),
+                  children: bookmarks.map((bookmark) {
+                    return ListTile(
+                      leading: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 1.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Color(colorCode)),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              Icons.bookmark,
+                              color: Color(bookmark.colorCode),
+                              size: 34,
+                            ),
+                            Text(
+                              bookmark.ayahNumber.toString(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                      title: Text(
+                        bookmark.name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      onTap: () => FlutterQuran()
+                          .navigateToBookmark(bookmark), // التنقل إلى العلامة
+                    );
+                  }).toList(),
+                );
+              }).toList(),
             ],
           ),
         ],

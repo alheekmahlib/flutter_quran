@@ -273,7 +273,8 @@ class FlutterQuranScreen extends StatelessWidget {
                     ...quranCtrl.staticPages[pageIndex].lines.map((line) {
                       return GetBuilder<BookmarksCtrl>(
                         builder: (bookmarkCtrl) {
-                          final bookmarksAyahs = bookmarkCtrl.bookmarks
+                          final bookmarksAyahs = bookmarkCtrl.bookmarks.values
+                              .expand((list) => list)
                               .map((bookmark) => bookmark.ayahId)
                               .toList();
                           return Column(
@@ -320,7 +321,8 @@ class FlutterQuranScreen extends StatelessWidget {
                       }
                       return GetBuilder<BookmarksCtrl>(
                         builder: (bookmarkCtrl) {
-                          final bookmarksAyahs = bookmarkCtrl.bookmarks
+                          final bookmarksAyahs = bookmarkCtrl.bookmarks.values
+                              .expand((list) => list)
                               .map((bookmark) => bookmark.ayahId)
                               .toList();
                           return Column(

@@ -16,7 +16,7 @@ class QuranLine extends StatelessWidget {
 
   final Line line;
   final List<int> bookmarksAyahs;
-  final List<BookmarkModel> bookmarks;
+  final Map<int, List<BookmarkModel>> bookmarks;
   final BoxFit boxFit;
   final Function? onAyahLongPress;
   final Function? onAyahPress;
@@ -59,6 +59,9 @@ class QuranLine extends StatelessWidget {
         children: line.ayahs.reversed.map((ayah) {
           quranCtrl.isAyahSelected =
               quranCtrl.selectedAyahIndexes.contains(ayah.id);
+          final allBookmarks = BookmarksCtrl.instance.bookmarks.values
+              .expand((list) => list)
+              .toList();
           // final String lastCharacter =
           //     ayah.ayah.substring(ayah.ayah.length - 1);
           return WidgetSpan(
@@ -74,8 +77,11 @@ class QuranLine extends StatelessWidget {
                   onAyahLongPress!(details, ayah);
                   quranCtrl.toggleAyahSelection(ayah.id);
                 } else {
-                  final bookmarkId = bookmarksAyahs.contains(ayah.id)
-                      ? bookmarks[bookmarksAyahs.indexOf(ayah.id)].id
+                  final bookmarkId = allBookmarks
+                          .any((bookmark) => bookmark.ayahId == ayah.id)
+                      ? allBookmarks
+                          .firstWhere((bookmark) => bookmark.ayahId == ayah.id)
+                          .id
                       : null;
                   if (bookmarkId != null) {
                     BookmarksCtrl.instance.removeBookmark(bookmarkId);
@@ -92,7 +98,10 @@ class QuranLine extends StatelessWidget {
                   color: hasBookmark(ayah.surahNumber, ayah.id).value
                       ? bookmarksColor
                       : (bookmarksAyahs.contains(ayah.id)
-                          ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
+                          ? Color(allBookmarks
+                                  .firstWhere(
+                                    (b) => b.ayahId == ayah.id,
+                                  )
                                   .colorCode)
                               .withValues(alpha: 0.7)
                           : quranCtrl.isAyahSelected
@@ -124,6 +133,9 @@ class QuranLine extends StatelessWidget {
       children: line.ayahs.reversed.map((ayah) {
         quranCtrl.isAyahSelected =
             quranCtrl.selectedAyahIndexes.contains(ayah.id);
+        final allBookmarks = BookmarksCtrl.instance.bookmarks.values
+            .expand((list) => list)
+            .toList();
         // final String lastCharacter =
         //     ayah.ayah.substring(ayah.ayah.length - 1);
         return WidgetSpan(
@@ -137,8 +149,11 @@ class QuranLine extends StatelessWidget {
                 onAyahLongPress!(details, ayah);
                 quranCtrl.toggleAyahSelection(ayah.id);
               } else {
-                final bookmarkId = bookmarksAyahs.contains(ayah.id)
-                    ? bookmarks[bookmarksAyahs.indexOf(ayah.id)].id
+                final bookmarkId = allBookmarks
+                        .any((bookmark) => bookmark.ayahId == ayah.id)
+                    ? allBookmarks
+                        .firstWhere((bookmark) => bookmark.ayahId == ayah.id)
+                        .id
                     : null;
                 if (bookmarkId != null) {
                   BookmarksCtrl.instance.removeBookmark(bookmarkId);
@@ -155,7 +170,10 @@ class QuranLine extends StatelessWidget {
                 color: hasBookmark(ayah.surahNumber, ayah.id).value
                     ? bookmarksColor
                     : (bookmarksAyahs.contains(ayah.id)
-                        ? Color(bookmarks[bookmarksAyahs.indexOf(ayah.id)]
+                        ? Color(allBookmarks
+                                .firstWhere(
+                                  (b) => b.ayahId == ayah.id,
+                                )
                                 .colorCode)
                             .withValues(alpha: 0.7)
                         : quranCtrl.isAyahSelected
