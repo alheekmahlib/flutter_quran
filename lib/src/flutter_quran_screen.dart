@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quran/flutter_quran.dart';
+import 'package:flutter_quran/src/extensions/surah_info_extension.dart';
 import 'package:flutter_quran/src/utils/string_extensions.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,8 +9,12 @@ import 'package:get/get.dart';
 
 import 'controllers/bookmarks_ctrl.dart';
 import 'controllers/quran_ctrl.dart';
+import 'models/banner_style.dart';
+import 'models/basmala_style.dart';
 import 'models/quran_constants.dart';
 import 'models/quran_page.dart';
+import 'models/surah_info_style.dart';
+import 'models/surah_name_style.dart';
 
 part 'utils/assets_path.dart';
 part 'utils/toast_utils.dart';
@@ -21,120 +26,116 @@ part 'widgets/quran_page_bottom_info.dart';
 part 'widgets/surah_header_widget.dart';
 
 class FlutterQuranScreen extends StatelessWidget {
-  const FlutterQuranScreen(
-      {this.showBottomWidget = true,
-      this.useDefaultAppBar = true,
-      this.bottomWidget,
-      this.appBar,
-      this.onPageChanged,
-      super.key,
-      required this.basmallahColor,
-      this.basmallahWidth,
-      this.basmallahHeight,
-      this.bannerImagePath,
-      this.bannerImageWidth,
-      this.bannerImageHeight,
-      required this.isSvg,
-      required this.bannerSvgPath,
-      this.bannerSvgWidth,
-      this.bannerSvgHeight,
-      required this.withPageView,
-      this.pageIndex,
-      this.bookmarksColor,
-      this.onAyahLongPress,
-      this.textColor,
-      this.surahNumber,
-      required this.surahNameColor,
-      this.ayahSelectedBackgroundColor,
-      this.surahNameWidth,
-      this.surahNameHeight,
-      this.bookmarkList,
-      this.onSurahBannerLongPress,
-      this.onAyahPress});
+  const FlutterQuranScreen({
+    this.showBottomWidget = true,
+    this.useDefaultAppBar = true,
+    this.bottomWidget,
+    this.appBar,
+    this.onPageChanged,
+    super.key,
+    this.basmalaStyle,
+    this.bannerStyle,
+    required this.withPageView,
+    this.pageIndex,
+    this.bookmarksColor,
+    this.onAyahLongPress,
+    this.textColor,
+    this.surahNumber,
+    this.ayahSelectedBackgroundColor,
+    this.bookmarkList,
+    this.onSurahBannerLongPress,
+    this.onPagePress,
+    this.surahNameStyle,
+    this.backgroundColor,
+    this.surahInfoStyle,
+    this.languageCode,
+  });
 
-  ///[showBottomWidget] is a bool to disable or enable the default bottom widget
+  /// متغير لتعطيل أو تمكين القطعة السفلية الافتراضية [showBottomWidget]
+  /// [showBottomWidget] is a bool to disable or enable the default bottom widget
   final bool showBottomWidget;
 
-  ///[showBottomWidget] is a bool to disable or enable the default bottom widget
+  /// متغير لتعطيل أو تمكين شريط التطبيقات الافتراضية [useDefaultAppBar]
+  /// [useDefaultAppBar] is a bool to disable or enable the default app bar widget
   final bool useDefaultAppBar;
 
-  ///[bottomWidget] if if provided it will replace the default bottom widget
+  /// إذا قمت بإضافة قطعة هنا فإنه سيحل محل القطعة السفلية الافتراضية [bottomWidget]
+  /// [bottomWidget] if if provided it will replace the default bottom widget
   final Widget? bottomWidget;
 
-  ///[appBar] if if provided it will replace the default app bar
+  /// إذا قمت بإضافة شريط التطبيقات هنا فإنه سيحل محل شريط التطبيقات الافتراضية [appBar]
+  /// [appBar] if if provided it will replace the default app bar
   final PreferredSizeWidget? appBar;
 
-  ///[onPageChanged] if provided it will be called when a quran page changed
+  /// إذا تم توفيره فسيتم استدعاؤه عند تغيير صفحة القرآن [onPageChanged]
+  /// [onPageChanged] if provided it will be called when a quran page changed
   final Function(int)? onPageChanged;
 
-  ///[basmallahColor] It is required to add the color for the basmalah
-  final Color basmallahColor;
+  /// تغيير نمط البسملة بواسطة هذه الفئة [BasmalaStyle]
+  /// [BasmalaStyle] Change the style of Basmala by BasmalaStyle class
+  final BasmalaStyle? basmalaStyle;
 
-  ///[basmallahWidth] if you wanna add the width for the basmalah
-  final double? basmallahWidth;
+  /// تغيير نمط الشعار من خلال هذه الفئة [BannerStyle]
+  /// [BannerStyle] Change the style of banner by BannerStyle class
+  final BannerStyle? bannerStyle;
 
-  ///[basmallahHeight] if you wanna add the height for the basmalah
-  final double? basmallahHeight;
+  /// تغيير نمط اسم السورة بهذه الفئة [SurahNameStyle]
+  /// [SurahNameStyle] Change the style of surah name by SurahNameStyle class
+  final SurahNameStyle? surahNameStyle;
 
-  ///[bannerImagePath] if you wanna add banner as image you can provide the path
-  final String? bannerImagePath;
+  /// تغيير نمط معلومات السورة بواسطة هذه الفئة [SurahInfoStyle]
+  /// [SurahInfoStyle] Change the style of surah information style by SurahInfoStyle class
+  final SurahInfoStyle? surahInfoStyle;
 
-  ///[bannerImageWidth] if you wanna add the width for the banner image
-  final double? bannerImageWidth;
-
-  ///[bannerImageHeight] if you wanna add the height for the banner image
-  final double? bannerImageHeight;
-
-  ///[isSvg] if you wanna add banner as svg you can set it to true
-  final bool isSvg;
-
-  ///[bannerSvgPath] if you wanna add banner as svg you can provide the path
-  final String bannerSvgPath;
-
-  ///[bannerSvgWidth] if you wanna add the width for the banner svg
-  final double? bannerSvgWidth;
-
-  ///[bannerSvgHeight] if you wanna add the height for the banner svg
-  final double? bannerSvgHeight;
-
-  ///[withPageView] Enable this variable if you want to display the Quran with PageView
+  /// قم بتمكين هذا المتغير إذا كنت تريد عرض القرآن باستخدام PageView [withPageView]
+  /// [withPageView] Enable this variable if you want to display the Quran with PageView
   final bool withPageView;
 
-  ///[pageIndex] pass the page number if you do not want to display the Quran with PageView
+  /// قم بتمرير رقم الصفحة إذا كنت لا تريد عرض القرآن باستخدام PageView [pageIndex]
+  /// [pageIndex] pass the page number if you do not want to display the Quran with PageView
   final int? pageIndex;
 
-  ///[bookmarksColor] Change the bookmark color (optional)
+  /// تغيير لون الإشارة المرجعية (اختياري) [bookmarksColor]
+  /// [bookmarksColor] Change the bookmark color (optional)
   final Color? bookmarksColor;
 
-  ///[onAyahLongPress] When you long press on any verse, you can add some features, such as copying the verse, sharing it, etc
+  /// عند الضغط لفترة طويلة على أي آية، يمكنك إضافة بعض الميزات، مثل نسخ الآية ومشاركتها وما إلى ذلك [onAyahLongPress]
+  /// [onAyahLongPress] When you long press on any verse, you can add some features, such as copying the verse, sharing it, etc
   final Function? onAyahLongPress;
 
-  ///[onSurahBannerLongPress] When you long press on any Surah banner, you can add some details about the surah
+  /// عند الضغط لفترة طويلة على أي لافتة سورة، يمكنك إضافة بعض التفاصيل حول السورة [onSurahBannerLongPress]
+  /// [onSurahBannerLongPress] When you long press on any Surah banner, you can add some details about the surah
   final Function? onSurahBannerLongPress;
 
-  ///[onAyahPress] When you press on any verse, you can add some features, such as copying the verse, sharing it, etc
-  final Function? onAyahPress;
+  /// عند الضغط على الصفحة يمكنك إضافة بعض المميزات مثل حذف التظليل عن الآية وغيرها [onPagePress]
+  /// [onPagePress] When you click on the page, you can add some features, such as deleting the shading from the verse and others
+  final Function? onPagePress;
 
-  ///[textColor] You can pass the color of the Quran text
+  /// يمكنك تمرير لون نص القرآن [textColor]
+  /// [textColor] You can pass the color of the Quran text
   final Color? textColor;
 
-  ///[surahNumber] You can pass the color of the Surah number
+  /// يمكنك تمرير رقم السورة [surahNumber]
+  /// [surahNumber] You can pass the Surah number
   final int? surahNumber;
 
-  ///[surahNameColor] You can pass the color of the Surah number color
-  final Color surahNameColor;
-
-  ///[ayahSelectedBackgroundColor] You can pass the color of the Ayah selected background color
+  /// يمكنك تمرير لون خلفية الآية المحدد [ayahSelectedBackgroundColor]
+  /// [ayahSelectedBackgroundColor] You can pass the color of the Ayah selected background
   final Color? ayahSelectedBackgroundColor;
 
-  ///[surahNameWidth] if you wanna add the width for the surah name
-  final double? surahNameWidth;
-
-  ///[surahNameHeight] if you wanna add the height for the surah name
-  final double? surahNameHeight;
-
-  ///[bookmarkList] if you wanna add the height for the surah name
+  /// إذا كنت تريد إضافة الارتفاع لاسم السورة [bookmarkList]
+  /// [bookmarkList] if you wanna add the height for the surah name
   final List? bookmarkList;
+
+  /// إذا كنت تريد تغيير لون خلفية صفحة القرآن [backgroundColor]
+  /// [backgroundColor] if you wanna change the background color of Quran page
+  final Color? backgroundColor;
+
+  /// إذا كنت تريد تمرير كود اللغة الخاصة بالتطبيق لتغيير الأرقام على حسب اللغة،
+  /// :رمز اللغة الإفتراضي هو 'ar' [languageCode]
+  /// [languageCode] If you want to pass the application's language code to change the numbers according to the language,
+  /// the default language code is 'ar'
+  final String? languageCode;
 
   @override
   Widget build(BuildContext context) {
@@ -144,17 +145,17 @@ class FlutterQuranScreen extends StatelessWidget {
       return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: backgroundColor ?? Colors.transparent,
           appBar: appBar ?? (useDefaultAppBar ? AppBar(elevation: 0) : null),
           drawer: appBar == null && useDefaultAppBar
               ? const _DefaultDrawer()
               : null,
-          body: quranCtrl.staticPages.isEmpty
+          body: quranCtrl.staticPages.isEmpty || quranCtrl.isLoading.value
               ? const Center(child: CircularProgressIndicator())
               : SafeArea(
                   child: withPageView
                       ? PageView.builder(
-                          itemCount: quranCtrl.staticPages.length,
+                          itemCount: 604,
                           controller: quranCtrl.pageController,
                           onPageChanged: (page) {
                             if (onPageChanged != null) onPageChanged!(page);
@@ -166,7 +167,6 @@ class FlutterQuranScreen extends StatelessWidget {
                               context,
                               index,
                               surahNumber,
-                              surahNameColor,
                               quranCtrl,
                               deviceSize,
                               currentOrientation,
@@ -176,8 +176,8 @@ class FlutterQuranScreen extends StatelessWidget {
                               bookmarkList: bookmarkList,
                               ayahSelectedBackgroundColor:
                                   ayahSelectedBackgroundColor,
-                              onSurahBannerLongPress: onSurahBannerLongPress,
-                              onAyahPress: onAyahPress,
+                              onSurahBannerPress: onSurahBannerLongPress,
+                              onAyahPress: onPagePress,
                             );
                           },
                         )
@@ -185,7 +185,6 @@ class FlutterQuranScreen extends StatelessWidget {
                           context,
                           pageIndex!,
                           surahNumber,
-                          surahNameColor,
                           quranCtrl,
                           deviceSize,
                           currentOrientation,
@@ -195,8 +194,8 @@ class FlutterQuranScreen extends StatelessWidget {
                           bookmarkList: bookmarkList,
                           ayahSelectedBackgroundColor:
                               ayahSelectedBackgroundColor,
-                          onSurahBannerLongPress: onSurahBannerLongPress,
-                          onAyahPress: onAyahPress,
+                          onSurahBannerPress: onSurahBannerLongPress,
+                          onAyahPress: onPagePress,
                         ),
                 ),
         ),
@@ -204,20 +203,14 @@ class FlutterQuranScreen extends StatelessWidget {
     });
   }
 
-  Widget _pageViewBuild(
-      BuildContext context,
-      int pageIndex,
-      int? surahNumber,
-      Color surahNameColor,
-      QuranCtrl quranCtrl,
-      Size deviceSize,
-      Orientation currentOrientation,
+  Widget _pageViewBuild(BuildContext context, int pageIndex, int? surahNumber,
+      QuranCtrl quranCtrl, Size deviceSize, Orientation currentOrientation,
       {Color? bookmarksColor,
       Color? textColor,
       Color? ayahSelectedBackgroundColor,
       List? bookmarkList,
       Function? onAyahLongPress,
-      Function? onSurahBannerLongPress,
+      Function? onSurahBannerPress,
       Function? onAyahPress}) {
     List<String> newSurahs = [];
     return Container(
@@ -232,28 +225,50 @@ class FlutterQuranScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SurahHeaderWidget(
-                      ayah: quranCtrl.staticPages[pageIndex].ayahs[0],
                       surahNumber ??
                           quranCtrl.staticPages[pageIndex].ayahs[0].surahNumber,
-                      isSvg: isSvg,
-                      bannerSvgPath: bannerSvgPath,
-                      bannerSvgWidth: bannerSvgWidth,
-                      bannerSvgHeight: bannerSvgHeight,
-                      surahNameWidth: surahNameWidth,
-                      surahNameHeight: surahNameHeight,
-                      surahNameColor: surahNameColor,
-                      bannerImageHeight: bannerImageHeight,
-                      bannerImageWidth: bannerImageWidth,
-                      bannerImagePath: bannerImagePath,
-                      onSurahBannerLongPress: onSurahBannerLongPress,
+                      bannerStyle: bannerStyle ??
+                          BannerStyle(
+                            isImage: false,
+                            bannerSvgPath: AssetsPath().surahSvgBanner,
+                            bannerSvgHeight: 40.0,
+                            bannerSvgWidth: 150.0,
+                            bannerImagePath: '',
+                            bannerImageHeight: 50,
+                            bannerImageWidth: double.infinity,
+                          ),
+                      surahNameStyle: surahNameStyle ??
+                          SurahNameStyle(
+                            surahNameWidth: 70,
+                            surahNameHeight: 37,
+                            surahNameColor: Colors.black,
+                          ),
+                      surahInfoStyle: surahInfoStyle ??
+                          SurahInfoStyle(
+                            ayahCount: 'عدد الآيات',
+                            secondTabText: 'عن السورة',
+                            firstTabText: 'أسماء السورة',
+                            backgroundColor: Colors.white,
+                            closeIconColor: Colors.black,
+                            indicatorColor: Colors.amber.withValues(alpha: 2),
+                            primaryColor: Colors.amber.withValues(alpha: 2),
+                            surahNameColor: Colors.black,
+                            surahNumberColor: Colors.black,
+                            textColor: Colors.black,
+                            titleColor: Colors.black,
+                          ),
+                      onSurahBannerPress: onSurahBannerPress,
                     ),
                     if (pageIndex == 1)
                       BasmallahWidget(
                         surahNumber: quranCtrl
                             .staticPages[pageIndex].ayahs[0].surahNumber,
-                        basmallahColor: basmallahColor,
-                        basmallahHeight: basmallahHeight,
-                        basmallahWidth: basmallahWidth,
+                        basmalaStyle: basmalaStyle ??
+                            BasmalaStyle(
+                              basmalaColor: Colors.black,
+                              basmalaWidth: 150.0,
+                              basmalaHeight: 30.0,
+                            ),
                       ),
                     ...quranCtrl.staticPages[pageIndex].lines.map((line) {
                       return GetBuilder<BookmarksCtrl>(
@@ -274,6 +289,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                     bookmarksColor: bookmarksColor,
                                     textColor: textColor,
                                     bookmarkList: bookmarkList,
+                                    pageIndex: pageIndex,
                                     ayahSelectedBackgroundColor:
                                         ayahSelectedBackgroundColor,
                                     onAyahPress: onAyahPress,
@@ -311,29 +327,52 @@ class FlutterQuranScreen extends StatelessWidget {
                             children: [
                               if (firstAyah)
                                 SurahHeaderWidget(
-                                  ayah:
-                                      quranCtrl.staticPages[pageIndex].ayahs[0],
                                   surahNumber ?? line.ayahs[0].surahNumber,
-                                  isSvg: isSvg,
-                                  bannerSvgPath: bannerSvgPath,
-                                  bannerSvgWidth: bannerSvgWidth,
-                                  bannerSvgHeight: bannerSvgHeight,
-                                  surahNameWidth: surahNameWidth,
-                                  surahNameHeight: surahNameHeight,
-                                  surahNameColor: surahNameColor,
-                                  bannerImageHeight: bannerImageHeight,
-                                  bannerImageWidth: bannerImageWidth,
-                                  bannerImagePath: bannerImagePath,
-                                  onSurahBannerLongPress:
-                                      onSurahBannerLongPress,
+                                  bannerStyle: bannerStyle ??
+                                      BannerStyle(
+                                        isImage: false,
+                                        bannerSvgPath:
+                                            AssetsPath().surahSvgBanner,
+                                        bannerSvgHeight: 40.0,
+                                        bannerSvgWidth: 150.0,
+                                        bannerImagePath: '',
+                                        bannerImageHeight: 50,
+                                        bannerImageWidth: double.infinity,
+                                      ),
+                                  surahNameStyle: surahNameStyle ??
+                                      SurahNameStyle(
+                                        surahNameWidth: 70,
+                                        surahNameHeight: 37,
+                                        surahNameColor: Colors.black,
+                                      ),
+                                  surahInfoStyle: surahInfoStyle ??
+                                      SurahInfoStyle(
+                                        ayahCount: 'عدد الآيات',
+                                        secondTabText: 'عن السورة',
+                                        firstTabText: 'أسماء السورة',
+                                        backgroundColor: Colors.white,
+                                        closeIconColor: Colors.black,
+                                        indicatorColor:
+                                            Colors.amber.withValues(alpha: 2),
+                                        primaryColor:
+                                            Colors.amber.withValues(alpha: 2),
+                                        surahNameColor: Colors.black,
+                                        surahNumberColor: Colors.black,
+                                        textColor: Colors.black,
+                                        titleColor: Colors.black,
+                                      ),
+                                  onSurahBannerPress: onSurahBannerPress,
                                 ),
                               if (firstAyah && (line.ayahs[0].surahNumber != 9))
                                 BasmallahWidget(
                                   surahNumber: quranCtrl.staticPages[pageIndex]
                                       .ayahs[0].surahNumber,
-                                  basmallahColor: basmallahColor,
-                                  basmallahHeight: basmallahHeight,
-                                  basmallahWidth: basmallahWidth,
+                                  basmalaStyle: basmalaStyle ??
+                                      BasmalaStyle(
+                                        basmalaColor: Colors.black,
+                                        basmalaWidth: 150.0,
+                                        basmalaHeight: 30.0,
+                                      ),
                                 ),
                               SizedBox(
                                 width: deviceSize.width - 30,
@@ -360,6 +399,7 @@ class FlutterQuranScreen extends StatelessWidget {
                                   bookmarksColor: bookmarksColor,
                                   textColor: textColor,
                                   bookmarkList: bookmarkList,
+                                  pageIndex: pageIndex,
                                   ayahSelectedBackgroundColor:
                                       ayahSelectedBackgroundColor,
                                   onAyahPress: onAyahPress,

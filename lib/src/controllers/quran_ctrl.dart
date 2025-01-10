@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_quran/src/models/surah.dart';
 import 'package:get/get.dart';
 
 import '../models/ayah.dart';
 import '../models/quran_page.dart';
+import '../models/surah_names_model.dart';
 import '../repository/quran_repository.dart';
 
 class QuranCtrl extends GetxController {
@@ -28,6 +32,8 @@ class QuranCtrl extends GetxController {
   bool isAyahSelected = false;
   RxDouble scaleFactor = 1.0.obs;
   RxDouble baseScaleFactor = 1.0.obs;
+  var isLoading = true.obs;
+  RxList<SurahNamesModel> surahsList = <SurahNamesModel>[].obs;
 
   PageController _pageController = PageController();
 
@@ -36,6 +42,16 @@ class QuranCtrl extends GetxController {
   //   loadQuran();
   //   super.onInit();
   // }
+
+  List<AyahModel> getAyahsByPage(int page) {
+    // تصفية القائمة بناءً على رقم الصفحة
+    final filteredAyahs = ayahs.where((ayah) => ayah.page == page).toList();
+
+    // فرز القائمة حسب رقم الآية
+    filteredAyahs.sort((a, b) => a.ayahNumber.compareTo(b.ayahNumber));
+
+    return filteredAyahs;
+  }
 
   Future<void> loadQuran({quranPages = QuranRepository.hafsPagesNumber}) async {
     lastPage = _quranRepository.getLastPage() ?? 1;
@@ -114,6 +130,22 @@ class QuranCtrl extends GetxController {
       }
       update();
     }
+  }
+
+  Future<void> fetchSurahs() async {
+    try {
+      isLoading(true);
+      final jsonResponse = await rootBundle.loadString(
+          'packages/flutter_quran/lib/assets/jsons/surahs_name.json');
+      final content = jsonDecode(jsonResponse);
+      final response = SurahResponseModel.fromJson(content);
+      surahsList.assignAll(response.surahs);
+    } catch (e) {
+      print('Error fetching data: $e');
+    } finally {
+      isLoading(false);
+    }
+    update();
   }
 
   List<AyahModel> search(String searchText) {

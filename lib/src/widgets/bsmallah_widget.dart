@@ -1,17 +1,14 @@
 part of '../flutter_quran_screen.dart';
 
 class BasmallahWidget extends StatelessWidget {
-  const BasmallahWidget(
-      {super.key,
-      required this.surahNumber,
-      required this.basmallahColor,
-      this.basmallahWidth,
-      this.basmallahHeight});
+  const BasmallahWidget({
+    super.key,
+    required this.surahNumber,
+    required this.basmalaStyle,
+  });
 
   final int surahNumber;
-  final Color basmallahColor;
-  final double? basmallahWidth;
-  final double? basmallahHeight;
+  final BasmalaStyle basmalaStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +17,10 @@ class BasmallahWidget extends StatelessWidget {
         surahNumber == 95 || surahNumber == 97
             ? AssetsPath().besmAllah2
             : AssetsPath().besmAllah,
-        width: basmallahWidth ?? 150,
-        height: basmallahHeight ?? 40,
-        colorFilter: ColorFilter.mode(basmallahColor, BlendMode.srcIn),
+        width: basmalaStyle.basmalaWidth ?? 150,
+        height: basmalaStyle.basmalaHeight ?? 40,
+        colorFilter:
+            ColorFilter.mode(basmalaStyle.basmalaColor, BlendMode.srcIn),
       ),
     );
   }

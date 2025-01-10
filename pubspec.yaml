@@ -1,6 +1,6 @@
 name: flutter_quran
 description: "A Quran Package you can put in your app and it will work without the need for any other resources."
-version: 0.1.8
+version: 0.1.9
 homepage: https://github.com/alheekmahlib/flutter_quran
 
 environment:
@@ -17,14 +17,14 @@ dependencies:
 
 
   # local storage
-  shared_preferences: ^2.3.2
+  shared_preferences: ^2.3.5
 
   #UI
-  fluttertoast: ^8.2.8
-  flutter_svg: ^2.0.16
+  fluttertoast: ^8.2.10
+  flutter_svg: ^2.0.17
 
   #Tools
-  intl: ^0.19.0
+  intl: ^0.20.1
 
 # This package supports all platforms listed below.
 # But note that it works and fits on mobile size devices
@@ -40,7 +40,7 @@ platforms:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 package_rename_config:
   android:
@@ -61,14 +61,21 @@ flutter:
     - lib/assets/
     - lib/assets/fonts/
     - lib/assets/fonts/hafs.ttf
+    - lib/assets/fonts/Kufam-Regular.ttf
+    - lib/assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf
     - lib/assets/jsons/
     - lib/assets/images/
     - lib/assets/svg/
     - lib/assets/svg/surah_name/
-    - lib/assets/images/surah_header.png
 
   fonts:
     - family: hafs
       fonts:
         - asset: packages/flutter_quran/assets/fonts/hafs.ttf
+    - family: kufi
+      fonts:
+        - asset: packages/flutter_quran/assets/fonts/Kufam-Regular.ttf
+    - family: naskh
+      fonts:
+        - asset: packages/flutter_quran/assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quran/flutter_quran.dart';
+import 'package:get/get.dart';
 
 void main() => runApp(
-      MaterialApp(
+      GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Colors.blue,
@@ -29,18 +30,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return const FlutterQuranScreen(
       withPageView: true,
-      basmallahColor: Colors.black,
-      basmallahWidth: 150.0,
-      basmallahHeight: 30.0,
-      isSvg: false,
-      bannerSvgPath: '',
-      bannerSvgHeight: 40.0,
-      bannerSvgWidth: 150.0,
-      bannerImagePath: null,
-      bannerImageHeight: null,
-      bannerImageWidth: null,
-      textColor: Colors.white,
-      surahNameColor: Colors.white,
+      textColor: Colors.black,
+      backgroundColor: Colors.white,
       bookmarkList: [],
     );
   }
